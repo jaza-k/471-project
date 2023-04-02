@@ -27,7 +27,7 @@ def check_country_city_exists(curs, country, city):
 def new_user_info(email, fname, lname, address, city, country, conn):
     
     # check types to make sure they are strings and stop injections 
-    assert type(email) == str   ,     "email is not valid"
+    assert type(email) == str   and check_field(email),     "email is not valid"
     assert type(fname) == str   and check_field(fname),     "first name is not valid"
     assert type(lname) == str   and check_field(lname),     "last name is not valid"
     assert type(address) == str and check_field(address),   "address is not valid"
@@ -42,7 +42,7 @@ def new_user_info(email, fname, lname, address, city, country, conn):
     check_country_city_exists(curs, country, city) 
     
     # insert new user into db 
-    curs.execute("INSERT INTO _user VALUES (%s, %s, %s, %s, %s)", (email, fname, lname, address, city))
+    curs.execute("INSERT INTO _user VALUES (%s, %s, %s, %s, %s, %s)", (email, fname, lname, address, city, 0))
     
     conn.commit()
     
@@ -61,12 +61,14 @@ def check_search_object(search_object:dict):
     return True 
         
     
-def new_user_search(search_object, conn):
+def new_user_search(search_object, email, origin_city, conn):
     assert check_search_object(search_object), "invalid inputs"
     
     # get db conn 
     # conn = psycopg2.connect(dsn.DSN) 
     curs = conn.cursor()
+    
+    usr_search_type_q = f""
     
     # for simplicity for now, assume we are only accepting vehicles 
     if search_object["search_type"] == "Vehicle":

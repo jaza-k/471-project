@@ -1,10 +1,11 @@
 
 user_table = """CREATE TABLE IF NOT EXISTS _user (
-    email VARCHAR(100),
-    first_name VARCHAR(50),
-    last_name VARCHAR(50),
-    _address VARCHAR(75), 
+    email VARCHAR(128),
+    first_name VARCHAR(64),
+    last_name VARCHAR(64),
+    _address VARCHAR(128), 
     _city_name VARCHAR(128),
+    _number_of_active_searches INT,
     PRIMARY KEY (email), 
     CONSTRAINT fk_city_name 
         FOREIGN KEY (_city_name) 
@@ -33,6 +34,7 @@ scraped_ads_table = """
 CREATE TABLE IF NOT EXISTS scraped_ads 
 (
     _ad_id SERIAL,
+    _ad_url VARCHAR(256) NOT NULL,
     _date_posted timestamp(0) NOT NULL,
     PRIMARY KEY (_ad_id)
 );
