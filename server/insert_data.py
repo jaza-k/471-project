@@ -6,20 +6,20 @@ import re
 # https://stackoverflow.com/questions/1323364/in-python-how-to-check-if-a-string-only-contains-certain-characters
 
 def check_field(attr:str):
-    okay_chars = re.compile('^[0-9a-zA-Z@.]').search            # create a function from the pattern 
-    return not bool(okay_chars(attr)) 
+    okay_chars = re.compile('^[0-9a-zA-Z@. ]').search            # create a function from the pattern 
+    return bool(okay_chars(attr)) 
 
 
 def check_country_city_exists(curs, country, city):
     # check to see that country and city exists already 
-    _q_check = f"SELECT COUNT(*) FROM is_in WHERE is_in._country = {country} AND is_in._city= {city};"
+    _q_check = f"SELECT COUNT(*) FROM is_in WHERE is_in._country = '{country}' AND is_in._city_name= '{city}';"
     curs.execute(_q_check)
     res = curs.fetchone()
     
     # res should be (1) so res[0] should just be one if 
     if res[0] != 1:
-        curs.execute("INSERT INTO city VALUES (%s)", (city))
-        curs.execute("INSERT INTO country VALUES (%s)", (country)) 
+        curs.execute("INSERT INTO city VALUES (%s)", (city,))
+        curs.execute("INSERT INTO country VALUES (%s)", (country,)) 
         curs.execute("INSERT INTO is_in VALUES (%s, %s)", (country, city))
         
     # else nothing needs to be done if they already exists 
@@ -27,7 +27,7 @@ def check_country_city_exists(curs, country, city):
 def new_user_info(email, fname, lname, address, city, country, conn):
     
     # check types to make sure they are strings and stop injections 
-    assert type(email) == str   and check_field(email),     "email is not valid"
+    assert type(email) == str   ,     "email is not valid"
     assert type(fname) == str   and check_field(fname),     "first name is not valid"
     assert type(lname) == str   and check_field(lname),     "last name is not valid"
     assert type(address) == str and check_field(address),   "address is not valid"
