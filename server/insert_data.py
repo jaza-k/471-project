@@ -31,7 +31,7 @@ def create_uuid(params)->str:
         _msg += str(p)      # incase not everything is a string when passed in 
     
     _msg_bytes = bytes(_msg, "UTF-8")
-    h = sha256(_msg_bytes).digest()
+    h = sha256(_msg_bytes).hexdigest()
     
     h_str = str(h)
     return h_str
@@ -105,7 +105,7 @@ def new_user_search(search_object:dict, email:str, origin_city:str):
     curs = conn.cursor()
     
     # first update number of user searches and create entry in active searches table 
-    usr_searches_q = f"SELECT u._number_of_active_searches FROM _user as u WHERE u.email={email};" 
+    usr_searches_q = f"SELECT u._number_of_active_searches FROM _user as u WHERE u.email='{email}';" 
     curs.execute(usr_searches_q)
     searches = curs.fetchone()
     if searches == None or len(searches) == 0:
@@ -121,9 +121,10 @@ def new_user_search(search_object:dict, email:str, origin_city:str):
     
     insert_usr_search = "INSERT INTO user_search VALUES (%s, %s, %s, %s, %s)"
     insert_usr_tuple = (search_uuid, current_time, True, email, origin_city)
+    
     curs.execute(insert_usr_search, insert_usr_tuple)
     
-    curs.execute(f"UPDATE _user SET _number_of_active_searches = {active_searches} WHERE email = {email};")
+    curs.execute(f"UPDATE _user SET _number_of_active_searches = {active_searches} WHERE email = '{email}';")
     
     # for simplicity for now, assume we are only accepting vehicles and motorcycles right now 
     search_type_insert = "INSERT INTO search_type VALUES (%s, %s, %s, %s, %s, %s, %s)"
