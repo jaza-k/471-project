@@ -73,7 +73,7 @@ def scrape_vehicles(num_pages):
         try:
             model = soup.find(itemprop="model").text
             if not model:
-                modle = "Other"
+                model = "Other"
         except AttributeError:
             model = "Other"
 
@@ -146,4 +146,4 @@ def scrape_vehicles(num_pages):
 
     return vehicle_df
 
-scrape_vehicles(1)
+# scrape_vehicles(1)

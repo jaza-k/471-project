@@ -4,6 +4,7 @@ import pandas as pd
 
 def scrape():
     vehicles_df = vehicles.scrape_vehicles(1)
+    motorcycles_df = motorcycles.scrape_motorcycles(1)
     #would be the same sort of format for bikes and motorcycles
 
     #insert to database here?
