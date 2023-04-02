@@ -1,7 +1,39 @@
 import dsn 
 import psycopg2 
 import re 
+from hashlib import sha256
 
+
+
+"""
+Instead of using Postgres' SERIAL and UUID, create a unique identifier by 
+concatenating relevant information togather and creating a sha256 digest
+
+this should create unique identifier that does not produce collisions 
+with high probability (probability of collision being 2^128)
+
+for creating the uuid for user_search : 
+    uuid_user = sha256 ( email || search_number || time_of_search ) 
+    
+for creating the uuid for scraped ads : 
+    uuid_ad = sha256 ( ad_id || ad_url ) 
+    
+parameters to be concatenated are passed as a list of strings 
+
+these are then uniform uuids that can be used for the search_type tables uuid atetribute 
+(32  bytes strings )
+"""
+def create_uuid(params)->str:
+    _msg = ""
+    
+    for p in  params:
+        _msg += str(p)      # incase not everything is a string when passed in 
+    
+    _msg_bytes = bytes(_msg, "UTF-8")
+    h = sha256(_msg_bytes).digest()
+    
+    h_str = str(h)
+    return h_str
 
 # https://stackoverflow.com/questions/1323364/in-python-how-to-check-if-a-string-only-contains-certain-characters
 
@@ -49,7 +81,7 @@ def new_user_info(email, fname, lname, address, city, country, conn):
     curs.close()
     # conn.close()
     
-    print("success")
+    # print("success")
     
     
 def check_search_object(search_object:dict):
@@ -67,6 +99,8 @@ def new_user_search(search_object, email, origin_city, conn):
     # get db conn 
     # conn = psycopg2.connect(dsn.DSN) 
     curs = conn.cursor()
+    
+    # first add a row to user_search 
     
     usr_search_type_q = f""
     
