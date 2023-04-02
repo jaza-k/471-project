@@ -152,8 +152,8 @@ CREATE TABLE IF NOT EXISTS scraped_from
 user_references_table = """
 CREATE TABLE IF NOT EXISTS user_references 
 (
-    _search_uuid uuid NOT NULL, 
-    _user_search_id SERIAL NOT NULL, 
+    _search_uuid VARCHAR(32) NOT NULL, 
+    _user_search_id VARCHAR(32) NOT NULL, 
     CONSTRAINT fk_search_uuid 
         FOREIGN KEY (_search_uuid) 
             REFERENCES search_type (__uuid),

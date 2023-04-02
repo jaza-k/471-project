@@ -2,6 +2,7 @@ import dsn
 import psycopg2 
 import re 
 from hashlib import sha256
+from datetime import datetime
 
 
 
@@ -10,7 +11,7 @@ Instead of using Postgres' SERIAL and UUID, create a unique identifier by
 concatenating relevant information togather and creating a sha256 digest
 
 this should create unique identifier that does not produce collisions 
-with high probability (probability of collision being 2^128)
+with high probability (attempts until collision being 2^128)
 
 for creating the uuid for user_search : 
     uuid_user = sha256 ( email || search_number || time_of_search ) 
@@ -56,7 +57,7 @@ def check_country_city_exists(curs, country, city):
         
     # else nothing needs to be done if they already exists 
     
-def new_user_info(email, fname, lname, address, city, country, conn):
+def new_user_info(email, fname, lname, address, city, country):
     
     # check types to make sure they are strings and stop injections 
     assert type(email) == str   and check_field(email),     "email is not valid"
@@ -67,7 +68,7 @@ def new_user_info(email, fname, lname, address, city, country, conn):
     assert type(country) == str and check_field(country),   "country is not valid"
     
     # get db conn objects 
-    # conn = psycopg2.connect(dsn.DSN)
+    conn = psycopg2.connect(dsn.DSN)
     curs = conn.cursor() 
     
     # check city and country already are in the db 
@@ -79,12 +80,12 @@ def new_user_info(email, fname, lname, address, city, country, conn):
     conn.commit()
     
     curs.close()
-    # conn.close()
+    conn.close()
     
     # print("success")
     
     
-def check_search_object(search_object:dict):
+def check_search_object(search_object:dict) -> bool:
     for (_, v) in search_object.items():
         
         if type(v) != str:      return False 
@@ -92,21 +93,44 @@ def check_search_object(search_object:dict):
         
     return True 
         
+        
+# def update_usr_searches(curs, email, origin_city):
     
-def new_user_search(search_object, email, origin_city, conn):
+    
+def new_user_search(search_object:dict, email:str, origin_city:str):
     assert check_search_object(search_object), "invalid inputs"
     
     # get db conn 
-    # conn = psycopg2.connect(dsn.DSN) 
+    conn = psycopg2.connect(dsn.DSN) 
     curs = conn.cursor()
     
-    # first add a row to user_search 
+    # first update number of user searches and create entry in active searches table 
+    usr_searches_q = f"SELECT u._number_of_active_searches FROM _user as u WHERE u.email={email};" 
+    curs.execute(usr_searches_q)
+    searches = curs.fetchone()
+    if searches == None or len(searches) == 0:
+        raise Exception("email does not exist in the DataBase")
     
-    usr_search_type_q = f""
+    active_searches = searches[0]
+    active_searches += 1
     
-    # for simplicity for now, assume we are only accepting vehicles 
+    current_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    
+    uuid_params = [email, active_searches, current_time]
+    search_uuid = create_uuid(uuid_params)
+    
+    insert_usr_search = "INSERT INTO user_search VALUES (%s, %s, %s, %s, %s)"
+    insert_usr_tuple = (search_uuid, current_time, True, email, origin_city)
+    curs.execute(insert_usr_search, insert_usr_tuple)
+    
+    curs.execute(f"UPDATE _user SET _number_of_active_searches = {active_searches} WHERE email = {email};")
+    
+    # for simplicity for now, assume we are only accepting vehicles and motorcycles right now 
+    search_type_insert = "INSERT INTO search_type VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    
     if search_object["search_type"] == "Vehicle":
         to_add = (
+            search_uuid,
             search_object["search_type"],
             search_object["make"],
             search_object["model"],
@@ -115,17 +139,28 @@ def new_user_search(search_object, email, origin_city, conn):
             search_object["type"]
         )
         
-        curs.execute("INSERT INTO search_type VALUES (%%, %s, %s, %s, %s, %s, %s)", to_add)
+        curs.execute(search_type_insert, to_add)
         
-    elif search_object["search_type"] == "Bicycle":
-        ...
     elif search_object["search_type"] == "Motorcycle":
+        to_add = (
+            search_uuid, 
+            search_object["search_type"],
+            search_object["make"],
+            search_object["model"],
+            search_object["year"], 
+            search_object["colour"],
+            search_object["type"]
+        )
+        
+        curs.execute(search_type_insert, to_add)
+    elif search_object["search_type"] == "Bicycle":
         ...
         
     conn.commit()
     curs.close()
-        
     
+    conn.close()
+        
 
 def new_scraped_ad(search_object, conn):
     ...
