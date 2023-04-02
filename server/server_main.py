@@ -1,6 +1,16 @@
 
+import psycopg2
+import insert_data
+import webscraper.main as scraper
+import pandas as pd
 
 
+def reformate_df(df):
+    return [dict(row) for _, row in df.iterrows()] # iterrows is very slow for very large dfs 
+
+def schedule_scrape():
+    vehicles = scraper.scrape_vehicles()
+    
 
 
 def search_matches_found(curs, _matches, usr_search_uuid):
