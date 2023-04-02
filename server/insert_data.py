@@ -21,8 +21,18 @@ for creating the uuid for scraped ads :
     
 parameters to be concatenated are passed as a list of strings 
 
+for creating the uuid for search types: 
+
+    if search type is a active user search: 
+        
+        uuid = sha256 ( uuid_user || all_attributes )
+    
+    else if the search type is a scraped ad
+
+        uuid = sha256 ( uuid_ad || all_attributes )
+
 these are then uniform uuids that can be used for the search_type tables uuid atetribute 
-(32  bytes strings )
+
 """
 def create_uuid(params)->str:
     _msg = ""
@@ -33,8 +43,7 @@ def create_uuid(params)->str:
     _msg_bytes = bytes(_msg, "UTF-8")
     h = sha256(_msg_bytes).hexdigest()
     
-    h_str = str(h)
-    return h_str
+    return h 
 
 # https://stackoverflow.com/questions/1323364/in-python-how-to-check-if-a-string-only-contains-certain-characters
 
@@ -117,10 +126,10 @@ def new_user_search(search_object:dict, email:str, origin_city:str):
     current_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     
     # create uuid for the active user search 
-    search_uuid = create_uuid([email, active_searches, current_time])
+    usr_search_uuid = create_uuid([email, active_searches, current_time])
     
     insert_usr_search = "INSERT INTO user_search VALUES (%s, %s, %s, %s, %s)"
-    insert_usr_tuple = (search_uuid, current_time, True, email, origin_city)
+    insert_usr_tuple = (usr_search_uuid, current_time, True, email, origin_city)
     
     curs.execute(insert_usr_search, insert_usr_tuple)
     
@@ -128,10 +137,11 @@ def new_user_search(search_object:dict, email:str, origin_city:str):
     
     # for simplicity for now, assume we are only accepting vehicles and motorcycles right now 
     search_type_insert = "INSERT INTO search_type VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    search_type_uuid = create_uuid([usr_search_uuid] + list(search_object.values()))
     
     if search_object["search_type"] == "Vehicle":
         to_add = (
-            search_uuid,
+            search_type_uuid,
             search_object["search_type"],
             search_object["make"],
             search_object["model"],
@@ -144,7 +154,7 @@ def new_user_search(search_object:dict, email:str, origin_city:str):
         
     elif search_object["search_type"] == "Motorcycle":
         to_add = (
-            search_uuid, 
+            search_type_uuid, 
             search_object["search_type"],
             search_object["make"],
             search_object["model"],
@@ -156,14 +166,21 @@ def new_user_search(search_object:dict, email:str, origin_city:str):
         curs.execute(search_type_insert, to_add)
     elif search_object["search_type"] == "Bicycle":
         ...
+    
+    
+    # add entry to user_references table 
+    user_references_q = "INSERT INTO user_references VALUES (%s, %s)"
+    user_references_tuple = (search_type_uuid, usr_search_uuid)
+    curs.execute(user_references_q, user_references_tuple) 
         
+    
     conn.commit()
     curs.close()
     
     conn.close()
         
 
-def new_scraped_ad(scrap_object, ad_type):
+def new_scraped_ad(scrap_object:dict, ad_type:str, marketplace_url:str):
     conn = psycopg2.connect(dsn.DSN)
     curs = conn.cursor()
     
@@ -186,12 +203,13 @@ def new_scraped_ad(scrap_object, ad_type):
     curs.execute(insert_scraped, insert_scraped_tuple) 
     
     # insert into search type the scraped ads' information 
-    
     search_type_insert = "INSERT INTO search_type VALUES (%s,%s,%s,%s,%s,%s,%s)"
+    
+    search_type_uuid = create_uuid([uuid_scraped_ad] + list(scrap_object.values()))
     
     if ad_type == "Vehicle":
         to_add = (
-            uuid_scraped_ad, 
+            search_type_uuid, 
             ad_type, 
             scrap_object["MAKE"], 
             scrap_object["MODEL"],
@@ -202,7 +220,7 @@ def new_scraped_ad(scrap_object, ad_type):
         
     elif ad_type == "Motorcycle":
         to_add = (
-            uuid_scraped_ad, 
+            search_type_uuid, 
             ad_type, 
             scrap_object["MAKE"], 
             scrap_object["MODEL"],
@@ -215,6 +233,20 @@ def new_scraped_ad(scrap_object, ad_type):
         
     curs.execute(search_type_insert, to_add)
     
+    # add entry to scraped_references table 
+    scraped_references_q = "INSERT INTO scraped_references VALUES (%s, %s)"
+    scraped_references_tuple = (search_type_uuid, uuid_scraped_ad)
+    curs.execute(scraped_references_q, scraped_references_tuple)
+    
+    # add entry to scraped_from table 
+    scraped_from_q = "INSERT INTO scraped_from VALUES (%s, %s)"
+    scraped_from_tuple = (uuid_scraped_ad, marketplace_url)
+    curs.execute(scraped_from_q, scraped_from_tuple)
+    
+    # add entry to ad_from table 
+    ad_from_q = "INSERT INTO ad_from VALUES (%s, %s)"
+    ad_from_tuple = (uuid_scraped_ad, _city)
+    curs.execute(ad_from_q, ad_from_tuple)
     
     conn.commit()
     curs.close()
