@@ -116,8 +116,8 @@ def new_user_search(search_object:dict, email:str, origin_city:str):
     
     current_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     
-    uuid_params = [email, active_searches, current_time]
-    search_uuid = create_uuid(uuid_params)
+    # create uuid for the active user search 
+    search_uuid = create_uuid([email, active_searches, current_time])
     
     insert_usr_search = "INSERT INTO user_search VALUES (%s, %s, %s, %s, %s)"
     insert_usr_tuple = (search_uuid, current_time, True, email, origin_city)
@@ -136,7 +136,7 @@ def new_user_search(search_object:dict, email:str, origin_city:str):
             search_object["model"],
             search_object["year"], 
             search_object["colour"],
-            search_object["type"]
+            search_object["body_type"]
         )
         
         curs.execute(search_type_insert, to_add)
@@ -148,8 +148,8 @@ def new_user_search(search_object:dict, email:str, origin_city:str):
             search_object["make"],
             search_object["model"],
             search_object["year"], 
-            search_object["colour"],
-            search_object["type"]
+            search_object["colour"], 
+            ""
         )
         
         curs.execute(search_type_insert, to_add)
@@ -162,8 +162,63 @@ def new_user_search(search_object:dict, email:str, origin_city:str):
     conn.close()
         
 
-def new_scraped_ad(search_object, conn):
-    ...
+def new_scraped_ad(scrap_object, ad_type):
+    conn = psycopg2.connect(dsn.DSN)
+    curs = conn.cursor()
+    
+    ### first create the entry in the scraped ads table ### 
+    
+    # check that city country pair exists already in the db 
+    _city = scrap_object["CITY"]
+    _country = scrap_object["COUNTRY"]
+    check_country_city_exists(curs, _country, _city)
+    
+    # create uuid 
+    _ad_url = scrap_object["AD URL"]
+    _ad_id = scrap_object["AD ID"]
+    uuid_scraped_ad = create_uuid([_ad_id, _ad_url]) 
+    
+    time_stamp = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    
+    insert_scraped = "INSERT INTO scraped_ads VALUES (%s, %s, %s, %s)"
+    insert_scraped_tuple = (uuid_scraped_ad, _ad_url, _city, time_stamp) 
+    curs.execute(insert_scraped, insert_scraped_tuple) 
+    
+    # insert into search type the scraped ads' information 
+    
+    search_type_insert = "INSERT INTO search_type VALUES (%s,%s,%s,%s,%s,%s,%s)"
+    
+    if ad_type == "Vehicle":
+        to_add = (
+            uuid_scraped_ad, 
+            ad_type, 
+            scrap_object["MAKE"], 
+            scrap_object["MODEL"],
+            scrap_object["YEAR"],
+            scrap_object["COLOR"], 
+            scrap_object["BODY TYPE"]
+        )
+        
+    elif ad_type == "Motorcycle":
+        to_add = (
+            uuid_scraped_ad, 
+            ad_type, 
+            scrap_object["MAKE"], 
+            scrap_object["MODEL"],
+            scrap_object["YEAR"],
+            scrap_object["COLOR"],
+            ""
+        )
+    elif ad_type == "Bicycle":
+        ...
+        
+    curs.execute(search_type_insert, to_add)
+    
+    
+    conn.commit()
+    curs.close()
+    
+    conn.close()
 
 
 if __name__ == "__main__":

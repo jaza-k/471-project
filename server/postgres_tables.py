@@ -35,8 +35,12 @@ CREATE TABLE IF NOT EXISTS scraped_ads
 (
     _ad_id VARCHAR(32) NOT NULL, -- sha256 digest
     _ad_url VARCHAR(256) NOT NULL,
-    _date_posted timestamp(0) NOT NULL,
+    _city VARCHAR (128) NOT NULL 
+    _date_added timestamp(0) NOT NULL,
     PRIMARY KEY (_ad_id)
+    CONSTRAINT fk_city 
+        FOREIGN KEY (_city)
+            REFERENCES city (_name)
 );
 """
 
@@ -98,7 +102,7 @@ search_type_table = """CREATE TABLE IF NOT EXISTS search_type
     _model VARCHAR (256),
     _year INT, 
     _colour VARCHAR (32),
-    _type VARCHAR (64), 
+    _body_type VARCHAR (64), 
 
     PRIMARY KEY (__uuid)
 );"""
