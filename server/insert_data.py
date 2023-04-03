@@ -52,7 +52,12 @@ def check_field(attr:str):
     return bool(okay_chars(attr)) 
 
 
-def check_country_city_exists(curs, country, city):
+def check_country_city_exists(curs, _country:str, _city:str):
+    
+    # make lowercase so all is uniform in the tables 
+    city = _city.lower()
+    country = _country.lower()
+    
     # check to see that country and city exists already 
     _q_check = f"SELECT COUNT(*) FROM is_in WHERE is_in._country = '{country}' AND is_in._city_name= '{city}';"
     curs.execute(_q_check)
@@ -60,8 +65,20 @@ def check_country_city_exists(curs, country, city):
     
     # res should be (1) so res[0] should just be one if 
     if res[0] != 1:
-        curs.execute("INSERT INTO city VALUES (%s)", (city,))
-        curs.execute("INSERT INTO country VALUES (%s)", (country,)) 
+        country_check = f"SELECT COUNT(*) FROM country WHERE country._name = '{country}';"
+        city_check = f"SELECT COUNT(*) FROM city WHERE city._name = '{city}';"
+        
+        curs.execute(city_check)
+        res = curs.fetchone()
+        if res[0] != 1:
+            curs.execute("INSERT INTO city VALUES (%s)", (city,))
+            
+        curs.execute(country_check)
+        res = curs.fetchone()
+        if res[0] != 1:
+            curs.execute("INSERT INTO country VALUES (%s)", (country,)) 
+            
+        
         curs.execute("INSERT INTO is_in VALUES (%s, %s)", (country, city))
         
     # else nothing needs to be done if they already exists 
@@ -84,7 +101,9 @@ def new_user_info(email, fname, lname, address, city, country):
     check_country_city_exists(curs, country, city) 
     
     # insert new user into db 
-    curs.execute("INSERT INTO _user VALUES (%s, %s, %s, %s, %s, %s)", (email, fname, lname, address, city, 0))
+    curs.execute("INSERT INTO _user VALUES (%s, %s, %s, %s, %s, %s)", 
+                 (email, fname, lname, address, city, 0)
+                )
     
     conn.commit()
     
@@ -101,9 +120,6 @@ def check_search_object(search_object:dict) -> bool:
         if not check_field(v):  return False 
         
     return True 
-        
-        
-# def update_usr_searches(curs, email, origin_city):
     
     
 def new_user_search(search_object:dict, email:str, origin_city:str):
@@ -150,8 +166,6 @@ def new_user_search(search_object:dict, email:str, origin_city:str):
             search_object["body_type"]
         )
         
-        curs.execute(search_type_insert, to_add)
-        
     elif search_object["search_type"] == "Motorcycle":
         to_add = (
             search_type_uuid, 
@@ -162,11 +176,11 @@ def new_user_search(search_object:dict, email:str, origin_city:str):
             search_object["colour"], 
             ""
         )
-        
-        curs.execute(search_type_insert, to_add)
+         
     elif search_object["search_type"] == "Bicycle":
         ...
     
+    curs.execute(search_type_insert, to_add)
     
     # add entry to user_references table 
     user_references_q = "INSERT INTO user_references VALUES (%s, %s)"
@@ -178,7 +192,51 @@ def new_user_search(search_object:dict, email:str, origin_city:str):
     curs.close()
     
     conn.close()
+    
+def extract_marketplace_name(url:str):
+    _match = re.search(r'www\.(\w+)\.', url)
+    name = _match.group(1)
+    return name 
         
+def check_marketplace(curs, marketplace_url:str, _country:str):
+    country = _country.lower()
+    q_check = f"SELECT COUNT(*) FROM marketplace WHERE marketplace._url = '{marketplace_url}';"
+    curs.execute(q_check)
+    res = curs.fetchone()
+    
+    if res[0] != 1:
+        marketplace_name = extract_marketplace_name(marketplace_url)
+        insert_q = "INSERT INTO marketplace VALUES (%s, %s)"
+        insert_tuple = (marketplace_url, marketplace_name)
+        curs.execute(insert_q, insert_tuple)
+        
+    q_check_available_in = f"""
+        SELECT 
+            COUNT(*) 
+        FROM 
+            available_in AS ai
+        WHERE 
+            ai._marketplace_url = '{marketplace_url}' AND 
+            ai._country = '{country}';
+        """
+    curs.execute(q_check_available_in)
+    res = curs.fetchone()
+    
+    if res[0] != 1:
+        insert_q = "INSERT INTO available_in VALUES (%s, %s)"
+        insert_tuple = (marketplace_url, country)
+        curs.execute(insert_q, insert_tuple)
+    
+        
+def check_ad_already_exists(curs, uuid:str) -> bool:
+    q = f"SELECT COUNT(*) FROM scraped_ads WHERE _ad_id = '{uuid}';"
+    curs.execute(q)
+    res = curs.fetchone()
+    if res[0] == 1:
+        return True 
+    
+    return False 
+
 
 def new_scraped_ad(scrap_object:dict, ad_type:str, marketplace_url:str):
     conn = psycopg2.connect(dsn.DSN)
@@ -191,10 +249,18 @@ def new_scraped_ad(scrap_object:dict, ad_type:str, marketplace_url:str):
     _country = scrap_object["COUNTRY"]
     check_country_city_exists(curs, _country, _city)
     
+    # check that the marketplace is already in the db 
+    # along with available in for marketplace and country 
+    check_marketplace(curs, marketplace_url, _country) 
+    
     # create uuid 
     _ad_url = scrap_object["AD URL"]
     _ad_id = scrap_object["AD ID"]
     uuid_scraped_ad = create_uuid([_ad_id, _ad_url]) 
+    
+    # we don't need to do anything else if the id exists (assuming this is not a strong collision)
+    if check_ad_already_exists(curs, uuid_scraped_ad):
+        return None 
     
     time_stamp = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     
@@ -202,10 +268,14 @@ def new_scraped_ad(scrap_object:dict, ad_type:str, marketplace_url:str):
     insert_scraped_tuple = (uuid_scraped_ad, _ad_url, _city, time_stamp) 
     curs.execute(insert_scraped, insert_scraped_tuple) 
     
-    # insert into search type the scraped ads' information 
+    ### insert into search type the scraped ads' information ###
+    
     search_type_insert = "INSERT INTO search_type VALUES (%s,%s,%s,%s,%s,%s,%s)"
     
     search_type_uuid = create_uuid([uuid_scraped_ad] + list(scrap_object.values()))
+    
+    # if there is no year then dedault to None 
+    scrap_object["YEAR"] = None if scrap_object["YEAR"] == '' else scrap_object["YEAR"]
     
     if ad_type == "Vehicle":
         to_add = (
@@ -235,7 +305,7 @@ def new_scraped_ad(scrap_object:dict, ad_type:str, marketplace_url:str):
     
     # add entry to scraped_references table 
     scraped_references_q = "INSERT INTO scraped_references VALUES (%s, %s)"
-    scraped_references_tuple = (search_type_uuid, uuid_scraped_ad)
+    scraped_references_tuple = (uuid_scraped_ad, search_type_uuid)
     curs.execute(scraped_references_q, scraped_references_tuple)
     
     # add entry to scraped_from table 

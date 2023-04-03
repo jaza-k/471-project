@@ -9,7 +9,7 @@ user_table = """CREATE TABLE IF NOT EXISTS _user (
     PRIMARY KEY (email), 
     CONSTRAINT fk_city_name 
         FOREIGN KEY (_city_name) 
-            REFERENCES city (_name) 
+            REFERENCES city (_name) ON DELETE CASCADE
 );"""
 
 
@@ -24,10 +24,10 @@ CREATE TABLE IF NOT EXISTS user_search
     PRIMARY KEY (_sid),
     CONSTRAINT fk_email 
         FOREIGN KEY (_email) 
-            REFERENCES _user (email),
+            REFERENCES _user (email) ON DELETE CASCADE,
     CONSTRAINT fk_origin_city 
         FOREIGN KEY (origin_city) 
-            REFERENCES city (_name) 
+            REFERENCES city (_name) ON DELETE CASCADE
 ); """
 
 scraped_ads_table = """
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS scraped_ads
     PRIMARY KEY (_ad_id),
     CONSTRAINT fk_city 
         FOREIGN KEY (_city)
-            REFERENCES city (_name)
+            REFERENCES city (_name) ON DELETE CASCADE
 );
 """
 
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS history
     _deactivation_date timestamp(0) NOT NULL,
     CONSTRAINT fk_user_search_id 
         FOREIGN KEY (_user_search_id) 
-            REFERENCES user_search (_sid)
+            REFERENCES user_search (_sid) ON DELETE CASCADE
 );
 """
 
@@ -62,10 +62,10 @@ matches_with_table = """CREATE TABLE IF NOT EXISTS matches_with
     _matched_ad_id VARCHAR(64) NOT NULL, 
     CONSTRAINT fk_seach_id 
         FOREIGN KEY (_search_id) 
-            REFERENCES user_search (_sid), 
+            REFERENCES user_search (_sid) ON DELETE CASCADE, 
     CONSTRAINT fk_matched_ad_id 
         FOREIGN KEY (_matched_ad_id) 
-            REFERENCES scraped_ads (_ad_id) 
+            REFERENCES scraped_ads (_ad_id) ON DELETE CASCADE
 );
 """
 
@@ -76,10 +76,10 @@ CREATE TABLE IF NOT EXISTS ad_from
     _origin_city VARCHAR(128) NOT NULL, 
     CONSTRAINT fk_from_ad_id 
         FOREIGN KEY (_from_ad_id) 
-            REFERENCES scraped_ads (_ad_id),
+            REFERENCES scraped_ads (_ad_id) ON DELETE CASCADE,
     CONSTRAINT fk_origin_city 
         FOREIGN KEY (_origin_city) 
-            REFERENCES city (_name)
+            REFERENCES city (_name) ON DELETE CASCADE
 );"""
 
 city_table = """CREATE TABLE IF NOT EXISTS city 
@@ -120,10 +120,10 @@ is_in_table = """CREATE TABLE IF NOT EXISTS is_in
     _city_name VARCHAR(128) NOT NULL, 
     CONSTRAINT fk_county 
         FOREIGN KEY (_country) 
-            REFERENCES country (_name), 
+            REFERENCES country (_name) ON DELETE CASCADE, 
     CONSTRAINT fk_city_name 
         FOREIGN KEY (_city_name) 
-            REFERENCES city (_name)
+            REFERENCES city (_name) ON DELETE CASCADE
 );"""
 
 scraped_references_table = """
@@ -133,10 +133,10 @@ CREATE TABLE IF NOT EXISTS scraped_references
     _ad_uuid VARCHAR(64) NOT NULL, 
     CONSTRAINT fk_ad_id_origin 
         FOREIGN KEY (_ad_id_origin) 
-            REFERENCES scraped_ads (_ad_id), 
+            REFERENCES scraped_ads (_ad_id) ON DELETE CASCADE, 
     CONSTRAINT fk_ad_uuid 
         FOREIGN KEY (_ad_uuid) 
-            REFERENCES search_type (__uuid)
+            REFERENCES search_type (__uuid) ON DELETE CASCADE
 ); """
 
 scraped_from = """
@@ -146,10 +146,10 @@ CREATE TABLE IF NOT EXISTS scraped_from
     _marketplace_url VARCHAR (256), 
     CONSTRAINT fk_ad_id_from
         FOREIGN KEY (_ad_id_from) 
-            REFERENCES scraped_ads (_ad_id), 
+            REFERENCES scraped_ads (_ad_id) ON DELETE CASCADE, 
     CONSTRAINT fk_marketplace_url 
         FOREIGN KEY (_marketplace_url) 
-            REFERENCES marketplace (_url)
+            REFERENCES marketplace (_url) ON DELETE CASCADE
 );
 """
 
@@ -160,10 +160,10 @@ CREATE TABLE IF NOT EXISTS user_references
     _user_search_id VARCHAR(64) NOT NULL, 
     CONSTRAINT fk_search_uuid 
         FOREIGN KEY (_search_uuid) 
-            REFERENCES search_type (__uuid),
+            REFERENCES search_type (__uuid) ON DELETE CASCADE,
     CONSTRAINT fk_user_search_id 
         FOREIGN KEY (_user_search_id) 
-            REFERENCES user_search (_sid) 
+            REFERENCES user_search (_sid) ON DELETE CASCADE
 ); """
 
 available_in = """CREATE TABLE IF NOT EXISTS available_In
@@ -172,10 +172,10 @@ available_in = """CREATE TABLE IF NOT EXISTS available_In
     _country VARCHAR(64) NOT NULL, 
     CONSTRAINT fk_marketplace_url
         FOREIGN KEY (_marketplace_url) 
-            REFERENCES marketplace (_url), 
+            REFERENCES marketplace (_url) ON DELETE CASCADE, 
     CONSTRAINT fk_country
         FOREIGN KEY (_country) 
-            REFERENCES country (_name) 
+            REFERENCES country (_name) ON DELETE CASCADE
 );
 """
 

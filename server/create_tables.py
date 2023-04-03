@@ -37,6 +37,9 @@ if __name__ == "__main__":
     
     drop_all_tables(conn)
     create_postgres_tables(conn)
+    # df = pd.DataFrame([])
+    # str_df = df.to_string()
+    # print(str_df)
     
     conn.close()
     
