@@ -65,8 +65,8 @@ def check_country_city_exists(curs, _country:str, _city:str):
     
     # res should be (1) so res[0] should just be one if 
     if res[0] != 1:
-        city_check = f"SELECT COUNT(*) FROM country WHERE country._name = '{country}';"
-        country_check = f"SELECT COUNT(*) FROM city WHERE city._name = '{country}';"
+        country_check = f"SELECT COUNT(*) FROM country WHERE country._name = '{country}';"
+        city_check = f"SELECT COUNT(*) FROM city WHERE city._name = '{city}';"
         
         curs.execute(city_check)
         res = curs.fetchone()
@@ -201,7 +201,8 @@ def extract_marketplace_name(url:str):
     name = _match.group(1)
     return name 
         
-def check_marketplace(curs, marketplace_url:str, country:str):
+def check_marketplace(curs, marketplace_url:str, _country:str):
+    country = _country.lower()
     q_check = f"SELECT COUNT(*) FROM marketplace WHERE marketplace._url = '{marketplace_url}';"
     curs.execute(q_check)
     res = curs.fetchone()
@@ -275,6 +276,9 @@ def new_scraped_ad(scrap_object:dict, ad_type:str, marketplace_url:str):
     search_type_insert = "INSERT INTO search_type VALUES (%s,%s,%s,%s,%s,%s,%s)"
     
     search_type_uuid = create_uuid([uuid_scraped_ad] + list(scrap_object.values()))
+    
+    # if there is no year then dedault to None 
+    scrap_object["YEAR"] = None if scrap_object["YEAR"] == '' else scrap_object["YEAR"]
     
     if ad_type == "Vehicle":
         to_add = (

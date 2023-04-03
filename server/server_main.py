@@ -1,30 +1,38 @@
 
 import psycopg2
+import dsn 
 import insert_data
-import webscraper.main as scraper
+# import webscraper.main as scraper
 import pandas as pd
 
 
 def reformate_df(df):
     return [dict(row) for _, row in df.iterrows()] # iterrows is very slow for very large dfs 
 
-def schedule_scrape():
-    vehicles = scraper.scrape_vehicles()
+# def schedule_scrape():
+#     vehicles = scraper.scrape_vehicles(1)
 
 def search_matches_found(curs, _matches, usr_search_uuid):
 
     for m in _matches:
-        check_match_exists_q = f"""SELECT COUNT(*) FROM matches_with
-WHERE _search_id = '{usr_search_uuid}'
-AND _matched_ad_id = '{m[0]}';"""
+        check_match_exists_q = f"""
+        SELECT 
+            COUNT(*) 
+        FROM 
+            matches_with
+        WHERE 
+            _search_id = '{usr_search_uuid}'
+            AND _matched_ad_id = '{m[0]}';
+        """
 
         curs.execute(check_match_exists_q)
         result = curs.fetchall()
 
         # if match isn't already present, insert as new match
         if not result or len(result) <= 0:
-            insert_matches_q = f"""INSERT INTO matches_with (_search_id, _matched_ad_id)
-VALUES ('{usr_search_uuid}', '{m[0]}');"""
+            insert_matches_q = f"""
+            INSERT INTO matches_with (_search_id, _matched_ad_id)
+            VALUES ('{usr_search_uuid}', '{m[0]}');"""
             curs.execute(insert_matches_q)
 
 
@@ -32,7 +40,7 @@ VALUES ('{usr_search_uuid}', '{m[0]}');"""
 def check_matches_against_user_searches(conn):
     # get all user emails 
     curs = conn.cursor()
-    email_q = "SELECT u.email FROM _user;"
+    email_q = "SELECT u.email FROM _user as u;"
     curs.execute(email_q) 
     emails = curs.fetchall()
     
@@ -40,11 +48,13 @@ def check_matches_against_user_searches(conn):
     for _e in emails:
         
         e = _e[0]   # extract the email 
+        print("checking: ", e)
+        
         
         # get all the users current searches 
         searches_q = """
         SELECT 
-            st.__uuid
+            st.__uuid,
             st._search_type, 
             st._make, 
             st._model, 
@@ -53,15 +63,20 @@ def check_matches_against_user_searches(conn):
             st._body_type 
         FROM 
             search_type as st, 
-            user_search as us 
+            user_search as us,
+            user_references as ur 
         WHERE 
-            us.email = %s AND us._sid = st.__uuid; 
+            us._email = %s AND 
+            ur._user_search_id = us._sid AND
+            ur._search_uuid = st.__uuid; 
         """
         
         # execute query 
         curs.execute(searches_q, (e,)) 
         
         results = curs.fetchall() 
+        
+        print("results are: ", results)
         
         # for each active search, search for possible matches 
         for res in results:
@@ -77,9 +92,9 @@ def check_matches_against_user_searches(conn):
                 st._colour, 
                 st._body_type 
             FROM 
-                search_type as st, 
+                search_type as st 
             WHERE 
-                st._seach_type = %s 
+                st._search_type = %s 
                 AND st._make = %s  
                 AND (st._model = %s OR st._model = 'Other')
                 AND st._year = %s       
@@ -90,9 +105,11 @@ def check_matches_against_user_searches(conn):
                         st.__uuid 
                     FROM 
                         search_type as st, 
-                        user_search as us
+                        user_search as us,
+                        user_references as ur
                     WHERE 
-                        us._sid != st.__uuid
+                        us._sid = ur._user_search_id AND
+                        st.__uuid = ur._search_uuid
                     );
             """
             
@@ -100,6 +117,7 @@ def check_matches_against_user_searches(conn):
             curs.execute(search_ads_q, search_ads_params)
             
             possible_matches = curs.fetchall()
+            print("possible matches: ",possible_matches)
             
             # possible match was found
             if len(possible_matches) > 0:
@@ -113,4 +131,9 @@ def check_matches_against_user_searches(conn):
     # end of active search loop 
     
 if __name__ == "__main__":
-    ... 
+    ...
+    # conn = psycopg2.connect(dsn.DSN)
+    # check_matches_against_user_searches(conn)
+    # conn.commit()
+    
+    # conn.close() 

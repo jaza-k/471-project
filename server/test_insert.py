@@ -31,7 +31,7 @@ def clear_tables():
         q += "ALTER TABLE "+ t + " ENABLE TRIGGER ALL;\n"
         # curs.execute(q)
     
-    print(q)
+    # print(q)
     
     curs.execute(q)
     conn.commit()
@@ -70,11 +70,11 @@ def test_new_usr():
 def test_new_usr_search():
     search_object = {
         "search_type": "Vehicle",
-        "make" : "yes",
-        "model" : "123",
-        "year" : "1997", 
-        "colour" : "blue",
-        "body_type" : "yes"
+        "make" : "Dodge",
+        "model" : "Journey",
+        "year" : "2011", 
+        "colour" : "Blue",
+        "body_type" : "SUV"
     }
     
     email = "johnsmith@gmail.com"
@@ -100,7 +100,7 @@ def get_pickle(_file):
     with open(_file, 'rb') as f:
         return pickle.load(f)
     
-def test_ad_insertions():
+def test_ad_single_insertion():
     v = get_pickle("/home/ubuntu/471-project/vehicle_sample.pickle")
     # m = get_pickle("/home/ubuntu/471-project/motorcycle_sample.pickle")
     # print(v)
@@ -127,12 +127,45 @@ def test_ad_insertions():
     
     
     curs.close()
-    conn.close()              
+    conn.close()    
+    
+def test_ads_multi_insertions():
+    vs = get_pickle("/home/ubuntu/471-project/vehicle_sample.pickle")
+    # for v in vs:
+    #     print(v)
+    #     print("\n")
+    conn = psycopg2.connect(dsn.DSN)
+    curs = conn.cursor()
+    
+    marketplace = "https://www.kijiji.ca"
+    ad_type = "Vehicle"
+    
+    for v in vs:
+        # q1 = "SELECT * FROM scraped_ads;"
+        # curs.execute(q1)
+        # res = curs.fetchall()
+        # print("count before insertion: ", len(res))
+        
+        insert_data.new_scraped_ad(v, ad_type, marketplace)
+        
+        # q1 = "SELECT * FROM scraped_ads;"
+        # curs.execute(q1)
+        # res = curs.fetchall()
+        # print("count after insertion: ", len(res))
+    
+    conn.commit()
+    curs.close()
+    
+    conn.close()  
+        
+        
+    
+    
     
     
     
 if __name__ == "__main__":
-    # test_new_usr()
-    # test_new_usr_search()
     clear_tables()
-    test_ad_insertions()
+    test_new_usr()
+    test_new_usr_search()
+    test_ads_multi_insertions()
