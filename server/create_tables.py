@@ -35,8 +35,8 @@ def create_postgres_tables(conn):
 if __name__ == "__main__":
     conn = psycopg2.connect(DSN)
     
-    # drop_all_tables(conn)
-    # create_postgres_tables(conn)
+    drop_all_tables(conn)
+    create_postgres_tables(conn)
     # df = pd.DataFrame([])
     # str_df = df.to_string()
     # print(str_df)
