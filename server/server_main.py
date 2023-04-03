@@ -10,14 +10,23 @@ def reformate_df(df):
 
 def schedule_scrape():
     vehicles = scraper.scrape_vehicles()
-    
-
 
 def search_matches_found(curs, _matches, usr_search_uuid):
-    
+
     for m in _matches:
-        ...
-        
+        check_match_exists_q = f"""SELECT COUNT(*) FROM matches_with
+WHERE _search_id = '{usr_search_uuid}'
+AND _matched_ad_id = '{m[0]}';"""
+
+        curs.execute(check_match_exists_q)
+        result = curs.fetchall()
+
+        # if match isn't already present, insert as new match
+        if not result or len(result) <= 0:
+            insert_matches_q = f"""INSERT INTO matches_with (_search_id, _matched_ad_id)
+VALUES ('{usr_search_uuid}', '{m[0]}');"""
+            curs.execute(insert_matches_q)
+
 
 
 def check_matches_against_user_searches(conn):
@@ -72,10 +81,10 @@ def check_matches_against_user_searches(conn):
             WHERE 
                 st._seach_type = %s 
                 AND st._make = %s  
-                AND st._model = %s      
+                AND (st._model = %s OR st._model = 'Other')
                 AND st._year = %s       
-                AND st._colour = %s 
-                AND st._body_type = %s 
+                AND (st._colour = %s OR st._colour = 'Other')
+                AND (st._body_type = %s OR st._body_type = 'Other')
                 AND st.__uuid NOT IN (
                     SELECT 
                         st.__uuid 
