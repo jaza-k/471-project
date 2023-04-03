@@ -101,7 +101,9 @@ def new_user_info(email, fname, lname, address, city, country):
     check_country_city_exists(curs, country, city) 
     
     # insert new user into db 
-    curs.execute("INSERT INTO _user VALUES (%s, %s, %s, %s, %s, %s)", (email, fname, lname, address, city, 0))
+    curs.execute("INSERT INTO _user VALUES (%s, %s, %s, %s, %s, %s)", 
+                 (email, fname, lname, address, city, 0)
+                )
     
     conn.commit()
     
@@ -118,9 +120,6 @@ def check_search_object(search_object:dict) -> bool:
         if not check_field(v):  return False 
         
     return True 
-        
-        
-# def update_usr_searches(curs, email, origin_city):
     
     
 def new_user_search(search_object:dict, email:str, origin_city:str):
@@ -167,8 +166,6 @@ def new_user_search(search_object:dict, email:str, origin_city:str):
             search_object["body_type"]
         )
         
-        curs.execute(search_type_insert, to_add)
-        
     elif search_object["search_type"] == "Motorcycle":
         to_add = (
             search_type_uuid, 
@@ -179,11 +176,11 @@ def new_user_search(search_object:dict, email:str, origin_city:str):
             search_object["colour"], 
             ""
         )
-        
-        curs.execute(search_type_insert, to_add)
+         
     elif search_object["search_type"] == "Bicycle":
         ...
     
+    curs.execute(search_type_insert, to_add)
     
     # add entry to user_references table 
     user_references_q = "INSERT INTO user_references VALUES (%s, %s)"

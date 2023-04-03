@@ -12,7 +12,7 @@ def reformate_df(df):
 # def schedule_scrape():
 #     vehicles = scraper.scrape_vehicles(1)
 
-def search_matches_found(curs, _matches, usr_search_uuid):
+def search_matches_found(curs, conn, _matches, usr_search_uuid):
 
     for m in _matches:
         check_match_exists_q = f"""
@@ -26,16 +26,16 @@ def search_matches_found(curs, _matches, usr_search_uuid):
         """
 
         curs.execute(check_match_exists_q)
-        result = curs.fetchall()
+        result = curs.fetchone()
 
+        
         # if match isn't already present, insert as new match
-        if not result or len(result) <= 0:
+        if not result or result[0] == 0:
             insert_matches_q = f"""
             INSERT INTO matches_with (_search_id, _matched_ad_id)
-            VALUES ('{usr_search_uuid}', '{m[0]}');"""
+            VALUES ('{usr_search_uuid}', '{m[0]}')"""
             curs.execute(insert_matches_q)
-
-
+            
 
 def check_matches_against_user_searches(conn):
     # get all user emails 
@@ -54,7 +54,7 @@ def check_matches_against_user_searches(conn):
         # get all the users current searches 
         searches_q = """
         SELECT 
-            st.__uuid,
+            us._sid,
             st._search_type, 
             st._make, 
             st._model, 
@@ -84,15 +84,11 @@ def check_matches_against_user_searches(conn):
             
             search_ads_q = """
             SELECT 
-                st.__uuid,
-                st._search_type, 
-                st._make, 
-                st._model, 
-                st._year, 
-                st._colour, 
-                st._body_type 
+                sa._ad_id
             FROM 
-                search_type as st 
+                search_type as st, 
+                scraped_references as sr,
+                scraped_ads as sa 
             WHERE 
                 st._search_type = %s 
                 AND st._make = %s  
@@ -100,17 +96,8 @@ def check_matches_against_user_searches(conn):
                 AND st._year = %s       
                 AND (st._colour = %s OR st._colour = 'Other')
                 AND (st._body_type = %s OR st._body_type = 'Other')
-                AND st.__uuid NOT IN (
-                    SELECT 
-                        st.__uuid 
-                    FROM 
-                        search_type as st, 
-                        user_search as us,
-                        user_references as ur
-                    WHERE 
-                        us._sid = ur._user_search_id AND
-                        st.__uuid = ur._search_uuid
-                    );
+                AND (sr._ad_uuid = st.__uuid)
+                AND (sr._ad_id_origin = sa._ad_id); 
             """
             
             search_ads_params = (res[1], res[2], res[3], res[4], res[5], res[6])
@@ -121,7 +108,7 @@ def check_matches_against_user_searches(conn):
             
             # possible match was found
             if len(possible_matches) > 0:
-                search_matches_found(curs, possible_matches, search_uuid)
+                search_matches_found(curs, conn, possible_matches, search_uuid)
             
             # else skip to the next 
 
