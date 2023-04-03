@@ -201,7 +201,7 @@ def extract_marketplace_name(url:str):
     name = _match.group(1)
     return name 
         
-def check_marketplace(curs, marketplace_url:str):
+def check_marketplace(curs, marketplace_url:str, country:str):
     q_check = f"SELECT COUNT(*) FROM marketplace WHERE marketplace._url = '{marketplace_url}';"
     curs.execute(q_check)
     res = curs.fetchone()
@@ -211,6 +211,24 @@ def check_marketplace(curs, marketplace_url:str):
         insert_q = "INSERT INTO marketplace VALUES (%s, %s)"
         insert_tuple = (marketplace_url, marketplace_name)
         curs.execute(insert_q, insert_tuple)
+        
+    q_check_available_in = f"""
+        SELECT 
+            COUNT(*) 
+        FROM 
+            available_in AS ai
+        WHERE 
+            ai._marketplace_url = '{marketplace_url}' AND 
+            ai._country = '{country}';
+        """
+    curs.execute(q_check_available_in)
+    res = curs.fetchone()
+    
+    if res[0] != 1:
+        insert_q = "INSERT INTO available_in VALUES (%s, %s)"
+        insert_tuple = (marketplace_url, country)
+        curs.execute(insert_q, insert_tuple)
+    
         
 def check_ad_already_exists(curs, uuid:str) -> bool:
     q = f"SELECT COUNT(*) FROM scraped_ads WHERE _ad_id = '{uuid}';"
@@ -234,7 +252,8 @@ def new_scraped_ad(scrap_object:dict, ad_type:str, marketplace_url:str):
     check_country_city_exists(curs, _country, _city)
     
     # check that the marketplace is already in the db 
-    check_marketplace(curs, marketplace_url)
+    # along with available in for marketplace and country 
+    check_marketplace(curs, marketplace_url, _country) 
     
     # create uuid 
     _ad_url = scrap_object["AD URL"]
@@ -251,7 +270,8 @@ def new_scraped_ad(scrap_object:dict, ad_type:str, marketplace_url:str):
     insert_scraped_tuple = (uuid_scraped_ad, _ad_url, _city, time_stamp) 
     curs.execute(insert_scraped, insert_scraped_tuple) 
     
-    # insert into search type the scraped ads' information 
+    ### insert into search type the scraped ads' information ###
+    
     search_type_insert = "INSERT INTO search_type VALUES (%s,%s,%s,%s,%s,%s,%s)"
     
     search_type_uuid = create_uuid([uuid_scraped_ad] + list(scrap_object.values()))
