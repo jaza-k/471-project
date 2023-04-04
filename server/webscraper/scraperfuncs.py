@@ -46,5 +46,6 @@ def save_sample_motorcycle():
         
         
 if __name__ == "__main__":
-    save_sample_vehicle()
-    save_sample_motorcycle()
+    ...
+    # save_sample_vehicle()
+    # save_sample_motorcycle()
