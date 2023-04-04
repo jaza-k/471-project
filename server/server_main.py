@@ -14,10 +14,13 @@ def reformate_df(df):
     return [dict(row) for _, row in df.iterrows()]  # iterrows is very slow for very large dfs 
 
 
-def remove_user_search(email:str, search_number:int):
-    ...
-
-
+def remove_user_active_search(email:str, search_num:int):
+    conn = psycopg2.connect(dsn.DSN)
+    funcs.remove_user_search(email, search_num, conn)
+    
+    conn.commit()
+    conn.close()
+    
 def schedule_scraping(pages:int):
     
     # scrape vehicles and then add them into the db 
@@ -40,7 +43,7 @@ def backend_main_subroutine(pages:int, wait_time:int):
     while RUN_MAIN_ROUTINE:
         
         _start = time()
-        schedule_scraping()
+        schedule_scraping(pages)
         
         funcs.check_matches_against_user_searches(conn)
         _end = time()

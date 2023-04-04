@@ -1,4 +1,5 @@
 import psycopg2
+from datetime import datetime
 
 def search_matches_found(curs, conn, _matches, usr_search_uuid):
 
@@ -104,3 +105,46 @@ def check_matches_against_user_searches(conn):
     curs.close()
     
     # end of active search loop 
+    
+    
+def remove_user_search(email:str, search_number:int, conn):
+    
+    # conn = psycopg2.connect(dsn.DSN)
+    curs = conn.cursor()
+    
+    user_search_q = f"""
+    SELECT 
+        us._sid
+    FROM 
+        user_search as us
+    WHERE 
+        us._email = '{email}' AND 
+        us._usr_search_num = '{search_number}'; 
+    """
+    
+    curs.execute(user_search_q)
+    us_id = curs.fetchone()[0]        # fetch the user_search id 
+    
+    # add it to the history table 
+    current_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    insert_history = "INSERT INTO history_table VALUES (%s, %s, %s)"
+    
+    curs.execute(insert_history, (us_id, email, current_time)) 
+    
+    """
+    remove user search from the tables that it appears in 
+    
+    should still be able to retrieve the information from the 
+    user_references table if needed, and in the search_type table will still have the 
+    information that the user entered in
+    """
+    delete_query = """
+    
+    DELETE FROM user_search WHERE _sid = '{us_id}';
+    DELETE FROM matches_with WHERE _search_id = '{us_id}';
+    """
+    
+    curs.execute(delete_query)
+    
+    conn.commit()
+    curs.close()

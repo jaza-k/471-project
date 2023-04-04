@@ -50,6 +50,7 @@ history_table = """
 CREATE TABLE IF NOT EXISTS history
 (
     _user_search_id VARCHAR(64) NOT NULL, 
+    _user_email VARCHAR(128) NOT NULL, 
     _deactivation_date timestamp(0) NOT NULL,
     CONSTRAINT fk_user_search_id 
         FOREIGN KEY (_user_search_id) 
