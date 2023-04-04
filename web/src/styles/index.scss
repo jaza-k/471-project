@@ -1,0 +1,163 @@
+@import url("https://fonts.googleapis.com/css2?family=Oxygen:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+// change font and colours
+$color-dark: #361D2E;
+$color-slate: #66758f;
+$color-light: #edf2f4;
+$color-red: #ef233c;
+$color-green: #7bc559;
+
+@keyframes fadein {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+.fade-in {
+	animation: fadein 0.5s;
+}
+
+body {
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+		"Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+		sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	background-color: #ffffff;
+}
+
+.spam {
+	color: $color-red;
+	font-weight: bold;
+}
+
+.accent-bar {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 10px;
+	&.bg-green {
+		background: $color-green;
+	}
+	&.bg-red {
+		background: $color-red;
+	}
+	&.bg-both {
+		background: linear-gradient(90deg, $color-red 50%, $color-green 50%);
+	}
+}
+
+.App {
+	background-color: #ffffff;
+	color: #000000;
+	font-family: "Mulish", sans-serif;
+}
+
+.button {
+	display: inline-flex;
+	align-items: flex-start;
+	justify-content: center;
+	white-space: nowrap;
+	border-radius: 50px;
+	padding: 10px 15px;
+	font-weight: 600;
+	text-decoration: none;
+	min-width: 80px;
+	box-shadow: 0 1px 20px 0 rgba(0, 0, 0, 0.1);
+	transition: 0.2s;
+	border: none;
+	user-select: none;
+	&:hover {
+		cursor: pointer;
+		transform: scale(1.05);
+	}
+}
+
+.game-over {
+	text-align: center;
+	margin-top: 5%;
+	padding-left: 40px;
+	padding-top: 30px;
+	& > h1 {
+		font-size: 40px;
+	}
+}
+
+.button-light {
+	background: white;
+	color: $color-dark;
+}
+
+.quit-button-dark {
+	background: $color-dark;
+	color: #ffffff;
+}
+
+.quit-button {
+	display: inline-flex;
+	align-items: flex-start;
+	justify-content: center;
+	white-space: nowrap;
+	border-radius: 50px;
+	padding: 10px 10px;
+	font-weight: 600;
+	text-decoration: none;
+	min-width: 80px;
+	font-size: 18px;
+	box-shadow: 0 1px 20px 0 rgba(0, 0, 0, 0.1);
+	transition: 0.2s;
+	border: none;
+	position: absolute;
+	right: 0;
+	top: 0;
+	margin-top: 50px;
+	margin-right: 50px;
+	user-select: none;
+	&:hover {
+		cursor: pointer;
+		transform: scale(1.05);
+	}
+}
+
+.button-dark {
+	background: $color-dark;
+	color: #ffffff;
+}
+
+.button-red {
+	background: $color-red;
+	color: $color-light;
+}
+
+.button-large {
+	width: 100px;
+	font-size: 15px;
+	padding: 10px 30px;
+}
+
+.button-green {
+	background: $color-green;
+	color: $color-light;
+}
+
+.text-green {
+	color: $color-green;
+}
+
+.text-red {
+	color: $color-red;
+}
+
+.card {
+	background: transparentize($color: $color-slate, $amount: 0.5);
+	border-radius: 15px;
+	display: flex;
+	width: 100%;
+	height: 100%;
+}
