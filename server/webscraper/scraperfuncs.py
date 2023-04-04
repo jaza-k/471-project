@@ -1,5 +1,5 @@
-import vehicles
-import motorcycles
+import webscraper.vehicles as vehicles
+import webscraper.motorcycles as motorcycles
 import pandas as pd
 import pickle
 
