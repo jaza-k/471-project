@@ -2,7 +2,7 @@
 import psycopg2
 import dsn 
 import insert_data
-# import webscraper.main as scraper
+import webscraper.main
 import pandas as pd
 
 
