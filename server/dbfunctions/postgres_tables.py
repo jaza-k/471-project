@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS user_search
     _active BOOLEAN NOT NULL, 
     _email VARCHAR(100) NOT NULL, 
     origin_city VARCHAR(128) NOT NULL,
+    _usr_search_num INT NOT NULL,
     PRIMARY KEY (_sid),
     CONSTRAINT fk_email 
         FOREIGN KEY (_email) 

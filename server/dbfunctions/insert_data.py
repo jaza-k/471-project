@@ -144,8 +144,8 @@ def new_user_search(search_object:dict, email:str, origin_city:str):
     # create uuid for the active user search 
     usr_search_uuid = create_uuid([email, active_searches, current_time])
     
-    insert_usr_search = "INSERT INTO user_search VALUES (%s, %s, %s, %s, %s)"
-    insert_usr_tuple = (usr_search_uuid, current_time, True, email, origin_city)
+    insert_usr_search = "INSERT INTO user_search VALUES (%s, %s, %s, %s, %s, %s)"
+    insert_usr_tuple = (usr_search_uuid, current_time, True, email, origin_city, active_searches)
     
     curs.execute(insert_usr_search, insert_usr_tuple)
     
