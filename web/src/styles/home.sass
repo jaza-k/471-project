@@ -1,0 +1,374 @@
+// .page
+// 	height: 100vh
+// 	@media all and (max-width: 1000px)
+// 		height: max-content
+
+// .page-heading
+// 	color: #331832
+// 	font-size: calc(30px + 2vmin)
+// 	font-weight: bold
+// 	margin-bottom: 0
+// 	margin-right: 150px
+// 	margin-top: 5%
+// 	text-align: center
+// 	font-family: 'Lexend', sans-serif
+// 	@media (max-width:480px)
+// 		font-size: calc(10px + 2vmin)
+// 		text-align: center
+// 	@media (max-width: 700px)
+// 		font-size: calc(10px + 2vmin)
+// 		text-align: center
+
+// .page-heading2
+// 	font-size: calc(15px + 1.5vmin)
+// 	font-weight: bold
+// 	font-family: 'Poppins', sans-serif
+
+// .subheading 
+// 	font-family: 'Lato', sans-serif
+// 	margin-top: 2%
+// 	margin-bottom: 60px
+// 	margin-left: 16%
+// 	font-size: calc(8px + 1vmin)
+// 	font-weight: 500
+// 	width: 60%
+// 	text-align: center
+
+// .illustration1
+// 	width: 500px
+// 	height:400px
+// 	margin-left: auto
+// 	margin-right: auto
+// 	@media (max-width:480px)
+// 		width: 300px
+// 		height: 300px
+
+// .homepage-section, .about-section
+// 	margin-left: 8%
+// 	display: flex
+// 	flex-direction: row
+// 	justify-content: space-between
+// 	@media all and (max-width: 1000px), all and (max-height: 600px)
+// 		flex-direction: column
+
+// .page-column
+// 	margin-top: 60px
+// 	flex: 1
+// 	> *
+// 		margin-right: 40px
+// 		margin-left: 40px
+
+// .button-description
+// 	font-size: calc( 10px + 1.8vmin )
+// 	margin-top: 40px
+// 	text-align: center
+
+// #signup-button
+// 	position: absolute
+// 	right: 25px
+// 	top: 25px
+
+// #login-button
+// 	position: absolute
+// 	right: 25px
+// 	top: 25px
+// 	margin-right: 9%
+
+// .illustration1
+// 	width: 600px
+// 	height:500px
+// 	margin-left: auto
+// 	margin-right: auto
+// 	padding-right: 105px
+// 	margin-top: 20px
+// 	@media (max-width:480px)
+// 		width: 300px
+// 		height: 300px
+
+// .end-buttons
+// 	display: flex
+// 	flex-direction: row
+// 	justify-content: space-between
+// 	width: 25%
+// 	margin-left: auto
+// 	margin-right: auto
+
+// .about-section
+// 	position: absolute
+// 	bottom: 0
+// 	left: 0
+// 	margin: 30px 30px
+// 	padding: 5px
+// 	min-width: 85px
+
+// #getstarted-button
+// 	margin-left: 39%
+// 	width: 12%
+// 	display: inline-flex
+// 	align-items: flex-start
+// 	justify-content: center
+// 	white-space: nowrap
+// 	border-radius: 50px
+// 	padding: 10px 15px
+// 	font-weight: 600
+// 	text-decoration: none
+// 	min-width: 80px
+// 	font-size: 17px
+// 	transition: 0.2s
+// 	border: none
+// 	user-select: none
+// 	background: #361D2E
+// 	color: #ffffff
+// 	&:hover
+// 		cursor: pointer
+// 		transform: scale(1.05)
+// 	@media (max-width:480px)
+// 		width: 5%
+// 		margin-left: 33%
+
+// .number
+// 	font-family: 'Poppins', sans-serif
+// 	font-weight: 800
+// 	margin-right: 20px
+
+// .flex-column
+// 	display: flex
+// 	flex-direction: column
+
+// .flex-row
+// 	display: flex
+// 	flex-direction: row
+// 	justify-content: space-between
+
+// .flex-align-center
+// 	align-items: center
+
+// .flex-center
+// 	display: flex
+// 	justify-content: center
+
+// .about-description
+// 	background: #ffffff
+// 	border: 2px solid #361D2E
+// 	padding: 0 35px
+// 	margin: 10% 0%
+// 	width: 100%
+// 	height: 40%
+// 	display: flex
+// 	flex-direction: column
+// 	font-size: 20px
+// 	@media all and (max-width: 1000px)
+// 		height: 100%
+// 		margin-bottom: 40px
+// 	@media all and (max-height: 600px)
+// 		height: max-content
+// 		margin-bottom: 40px
+// 		padding-bottom: 20px
+// 	@media all and (max-width: 700px)
+// 		width: 95%
+// 		margin-right: 8%
+// 	@media (max-width:480px)
+// 		height: 100%
+// 		margin-bottom: 40px
+// 		margin-right: 8%
+
+// .logo-bar
+// 	display: flex
+// 	flex-direction: row
+// 	width: 220px
+// 	margin-top: 10px
+// 	margin-left: 15px
+// 	cursor: pointer
+// 	@media (max-width:480px)
+// 		flex-direction: column
+.page
+	height: 100vh
+	@media screen and (max-width: 1000px)
+		height: 100%
+
+.page-heading
+	color: #331832
+	font-size: calc(30px + 2vmin)
+	font-weight: bold
+	margin-bottom: 0
+	margin-right: 5vw // Changed from 150px to 5vw
+	margin-top: 5%
+	text-align: center
+	font-family: 'Lexend', sans-serif
+	@media (max-width:480px)
+		font-size: calc(10px + 2vmin)
+		text-align: center
+		margin-right: 0 // Remove right margin on small screens
+	@media (max-width: 700px)
+		font-size: calc(10px + 2vmin)
+		text-align: center
+
+.page-heading2
+	font-size: calc(15px + 1.5vmin)
+	font-weight: bold
+	font-family: 'Poppins', sans-serif
+
+.subheading
+	font-family: 'Lato', sans-serif
+	margin-top: 2%
+	margin-bottom: 4vh // Changed from 60px to 4vh
+	margin-left: 5vw // Changed from 16% to 5vw
+	font-size: calc(8px + 1vmin)
+	font-weight: 500
+	width: 90% // Changed from 60% to 90%
+	margin-right: auto // Added to center the element on small screens
+	margin-left: auto // Added to center the element on small screens
+	text-align: center
+
+.illustration1
+	width: 50vw // Changed from 500px to 50vw
+	height: 40vh // Changed from 400px to 40vh
+	margin-left: auto
+	margin-right: auto
+	@media (max-width:480px)
+		width: 70vw // Changed from 300px to 70vw
+		height: 35vh // Changed from 300px to 35vh
+
+.homepage-section, .about-section
+	margin-left: 5vw // Changed from 8% to 5vw
+	display: flex
+	flex-direction: row
+	justify-content: space-between
+	@media all and (max-width: 1000px), all and (max-height: 600px)
+		flex-direction: column
+
+.page-column
+	margin-top: 4vh // Changed from 60px to 4vh
+	flex: 1
+> *
+	margin-right: 4vw // Changed from 40px to 4vw
+	margin-left: 4vw // Changed from 40px to 4vw
+
+.button-description
+	font-size: calc( 10px + 1.8vmin )
+	margin-top: 4vh // Changed from 40px to 4vh
+	text-align: center
+
+#signup-button
+	position: absolute
+	right: 3vw // Changed from 25px to 3vw
+	top: 3vw // Changed from 25px to 3vw
+
+#login-button
+	position: absolute
+	right: 25px // Changed from 25px to 3vw
+	top: 25px // Changed from 25px to 3vw
+	margin-right: 0 // Remove right margin on small screens
+
+.illustration1
+	width: 50vw // Changed from 600px to 50vw
+	height: 40vh // Changed from 500px to 40vh
+	margin-left: auto
+	margin-right: auto
+	padding-right: 10vw // Changed from 105px to 10vw
+	margin-top: 4vh // Changed from 20px to 4vh
+	@media (max-width:480px)
+		width: 70vw // Changed from 300px to 70vw
+		height: 35vh // Changed from 300px to 35vh
+		padding-right: 0 // Remove right padding on small screens
+
+.end-buttons
+	display: flex
+	flex-direction: row
+	justify-content: space-between
+	width: 25%
+	margin-left: auto
+	margin-right: auto
+
+.about-section
+	position: absolute
+	bottom: 0
+	left: 0
+	margin: 4vh // Changed from 30px to 4vh
+	padding: 1vh // Changed from 5px to 1vh
+	min-width: 8vw // Changed from 85px to 8vw
+
+#getstarted-button
+	margin-left: 35vw // Changed from 39% to 35vw
+	width: 12%
+	display: inline-flex
+	align-items: flex-start
+	justify-content: center
+	white-space: nowrap
+	border-radius: 50px
+	padding: 1vh // Changed from 10px to 1vh
+	font-weight: 600
+	text-decoration: none
+	min-width: 8vw // Changed from 80px to 8vw
+	font-size: calc(1vw + 1.2vh) // Changed from 17px to responsive font size
+	transition: 0.2s
+	border: none
+	user-select: none
+	background: #361D2E
+	color: #ffffff
+	&:hover
+		cursor: pointer
+		transform: scale(1.05)
+	@media (max-width:480px)
+		width: 5vw // Changed from 5% to 5vw
+		margin-left: 33vw // Changed from 33% to 33vw
+
+.number
+	font-family: 'Poppins', sans-serif
+	font-weight: 800
+	margin-right: 2vw // Changed from 20px to 2vw
+
+.flex-column
+	display: flex
+	flex-direction: column
+
+.flex-row
+	display: flex
+	flex-direction: row
+	justify-content: space-between
+
+.flex-align-center
+	align-items: center
+
+.flex-center
+	display: flex
+	justify-content: center
+
+.about-description
+	background: #ffffff
+	border: 2px solid #361D2E
+	padding: 0 5vw // Changed from 35px to 5vw
+	margin: 10vh 0 // Changed from 10% to 10vh
+	width: 90% // Changed from 100% to 90%
+	height: 40%
+	display: flex
+	flex-direction: column
+	font-size: calc(1vw + 1.6vh) // Changed from 20px to responsive font size
+	@media all and (max-width: 1000px)
+		height: max-content // Changed from 100% to max-content
+		margin-bottom: 4vh // Changed from 40px to 4vh
+		padding-bottom: 2vh // Changed from 20px to 2vh
+	@media all and (max-height: 600px)
+		height: max-content // Changed from 100% to max-content
+		margin-bottom: 4vh // Changed from 40px to 4vh
+		padding-bottom: 2vh // Changed from ..2vh
+	@media all and (max-width: 700px)
+		width: 95%
+		margin-right: 2vw // Changed from 8% to 2vw
+		margin-left: auto // Added to center the element on small screens
+		margin-right: auto // Added to center the element on small screens
+		padding: 0 3vw // Changed from 35px to 3vw
+	@media (max-width:480px)
+		height: max-content // Changed from 100% to max-content
+		margin-bottom: 4vh // Changed from 40px to 4vh
+		margin-right: 2vw // Changed from 8% to 2vw
+
+.logo-bar
+	display: flex
+	flex-direction: row
+	width: 20vw // Changed from 220px to 20vw
+	margin-top: 2vh // Changed from 10px to 2vh
+	margin-left: 2vw // Changed from 15px to 2vw
+	cursor: pointer
+	@media (max-width:480px)
+		flex-direction: column
