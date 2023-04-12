@@ -108,7 +108,7 @@ def new_user_info(email, fname, lname, address, city, country, conn):
     conn.commit()
     
     curs.close()
-    conn.close()
+    # conn.close()
     
     # print("success")
     
@@ -191,7 +191,7 @@ def new_user_search(search_object:dict, email:str, origin_city:str, conn):
     conn.commit()
     curs.close()
     
-    conn.close()
+    # conn.close()
     
 def extract_marketplace_name(url:str):
     _match = re.search(r'www\.(\w+)\.', url)

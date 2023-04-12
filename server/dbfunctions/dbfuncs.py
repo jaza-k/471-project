@@ -1,5 +1,6 @@
 import psycopg2
 from datetime import datetime
+from emails import send_email
 
 def search_matches_found(curs, conn, _matches, usr_search_uuid):
 
@@ -24,6 +25,30 @@ def search_matches_found(curs, conn, _matches, usr_search_uuid):
             INSERT INTO matches_with (_search_id, _matched_ad_id)
             VALUES ('{usr_search_uuid}', '{m[0]}')"""
             curs.execute(insert_matches_q)
+            
+            # send the user an email 
+            get_usr = """
+            SELECT 
+                us._email, 
+                ur.first_name 
+            FROM 
+                user_search as us, 
+                _user as ur 
+            WHERE 
+                us._sid = %s AND
+                us._email = ur.email; 
+            """
+            
+            curs.execute(get_usr, (usr_search_uuid,)) 
+            res = curs.fetchone()
+            email, fname = res 
+            
+            # send the user an email to let them know
+            # it should only eamil them once since if the possible match is 
+            # already in the db then it won't send it again
+            send_email.send_email_notification(email, fname) 
+            
+            
             
 
 def check_matches_against_user_searches(conn):
