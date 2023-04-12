@@ -13,7 +13,7 @@ function Dashboard() {
 	}
      
 	return (
-		<div className="App fade-in">
+		<div className="App">
 			<Logo onClick={handleClick} className="logo-bar"/>
 			<div className="page login-section">
 				<div className="page-column flex-align-center flex-column">

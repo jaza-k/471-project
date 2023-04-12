@@ -35,7 +35,7 @@ function Landing() {
                             Whether it's your car, bicycle, or motorbike, Find My Ride scours the web for you to check if it's being sold online. If your vehicle turns up, we notify you right away of a possible match. All we need is a description of what's gone missing and let us do the rest. 
 							</p>
 							<div>
-							<Link to="/signup" id="play-button" className="button button-light button-large">
+							<Link to="/signup" id="getstarted-button" className="button button-light button-large">
 								Get started  ―  it's free
 							</Link>
 							</div>

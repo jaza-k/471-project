@@ -28,12 +28,7 @@ body {
 		sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	background-color: #ffffff;
-}
-
-.spam {
-	color: $color-red;
-	font-weight: bold;
+	background-color:#fffbfb;
 }
 
 .accent-bar {
@@ -54,7 +49,7 @@ body {
 }
 
 .App {
-	background-color: #ffffff;
+	background-color: #fffbfb;
 	color: #000000;
 	font-family: "Mulish", sans-serif;
 }
@@ -94,37 +89,6 @@ body {
 	color: $color-dark;
 }
 
-.quit-button-dark {
-	background: $color-dark;
-	color: #ffffff;
-}
-
-.quit-button {
-	display: inline-flex;
-	align-items: flex-start;
-	justify-content: center;
-	white-space: nowrap;
-	border-radius: 50px;
-	padding: 10px 10px;
-	font-weight: 600;
-	text-decoration: none;
-	min-width: 80px;
-	font-size: 18px;
-	box-shadow: 0 1px 20px 0 rgba(0, 0, 0, 0.1);
-	transition: 0.2s;
-	border: none;
-	position: absolute;
-	right: 0;
-	top: 0;
-	margin-top: 50px;
-	margin-right: 50px;
-	user-select: none;
-	&:hover {
-		cursor: pointer;
-		transform: scale(1.05);
-	}
-}
-
 .button-dark {
 	background: $color-dark;
 	color: #ffffff;
@@ -144,20 +108,4 @@ body {
 .button-green {
 	background: $color-green;
 	color: $color-light;
-}
-
-.text-green {
-	color: $color-green;
-}
-
-.text-red {
-	color: $color-red;
-}
-
-.card {
-	background: transparentize($color: $color-slate, $amount: 0.5);
-	border-radius: 15px;
-	display: flex;
-	width: 100%;
-	height: 100%;
 }

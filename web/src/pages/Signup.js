@@ -106,7 +106,7 @@ function Login() {
 		<div className="App fade-in">
 			<Logo onClick={handleClick} className="logo-bar"/>
 			<div className="page login-section">
-            <img className="lock-image" src={lock}/>
+            <img className="lock-image" alt="" src={lock}/>
 				<div className="page-column flex-align-center flex-column">
 					<div>
 						<div>
