@@ -43,6 +43,9 @@ def search_matches_found(curs, conn, _matches, usr_search_uuid):
             res = curs.fetchone()
             email, fname = res 
             
+            # send the user an email to let them know
+            # it should only eamil them once since if the possible match is 
+            # already in the db then it won't send it again
             send_email.send_email_notification(email, fname) 
             
             
