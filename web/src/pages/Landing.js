@@ -17,15 +17,17 @@ function Landing() {
 		<div className="App fade-in">
 			<Logo onClick={handleClick} className="logo-bar"/>
 			<div className="page homepage-section">
-				<div>
-					<Link to="/login" id="login-button" className="button button-light button-large">
-						Log in
-					</Link>
+				<div className="top-buttons">
+					<div>
+						<Link to="/login" id="login-button" className="button button-light button-large">
+							Log in
+						</Link>
 					</div>
 					<div>
-					<Link to="/signup" id="signup-button" className="button button-dark button-large">
-						Sign up
-					</Link>
+						<Link to="/signup" id="signup-button" className="button button-dark button-large">
+							Sign up
+						</Link>
+					</div>
 				</div>
 				<div className="page-column flex-align-center flex-column">
 					<div>
