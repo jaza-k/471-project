@@ -1,13 +1,13 @@
 import dsn 
 import psycopg2
-import server_main 
+import dbfuncs 
 
 
 
 def test_checking_matches():
     conn = psycopg2.connect(dsn.DSN)
     
-    server_main.check_matches_against_user_searches(conn)
+    dbfuncs.check_matches_against_user_searches(conn)
     
     curs = conn.cursor()
     

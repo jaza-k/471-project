@@ -41,7 +41,7 @@ def clear_tables():
 def test_new_usr():
     fname = "john"
     lname = "smith"
-    email = "johnsmith@gmail.com"
+    email = "petermichaelkuchel@gmail.com"
     address = "123 fake street"
     city = "calgary"
     country = "Canada"
@@ -57,7 +57,7 @@ def test_new_usr():
     
     conn = psycopg2.connect(dsn.DSN)
     
-    insert_data.new_user_info(email, fname, lname, address, city, country)
+    insert_data.new_user_info(email, fname, lname, address, city, country, conn)
     
     curs = conn.cursor()
     q = f"SELECT * FROM _user;"
@@ -77,12 +77,15 @@ def test_new_usr_search():
         "body_type" : "SUV"
     }
     
-    email = "johnsmith@gmail.com"
+    email = "petermichaelkuchel@gmail.com"
     _city = "calgary"
     
-    insert_data.new_user_search(search_object, email, _city)
+    
     
     conn = psycopg2.connect(dsn.DSN)
+    
+    insert_data.new_user_search(search_object, email, _city, conn)
+    
     curs = conn.cursor()
     q = f"SELECT * FROM user_search;"
     curs.execute(q) 
@@ -146,7 +149,7 @@ def test_ads_multi_insertions():
         # res = curs.fetchall()
         # print("count before insertion: ", len(res))
         
-        insert_data.new_scraped_ad(v, ad_type, marketplace)
+        insert_data.new_scraped_ad(v, ad_type, marketplace, conn)
         
         # q1 = "SELECT * FROM scraped_ads;"
         # curs.execute(q1)

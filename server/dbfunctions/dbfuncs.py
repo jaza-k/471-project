@@ -28,9 +28,9 @@ def search_matches_found(curs, conn, _matches, usr_search_uuid):
             
             # send the user an email 
             get_usr = """
-            "SELECT 
-                us.email, 
-                ur.name 
+            SELECT 
+                us._email, 
+                ur.first_name 
             FROM 
                 user_search as us, 
                 _user as ur 
