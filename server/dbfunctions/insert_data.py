@@ -4,8 +4,6 @@ import re
 from hashlib import sha256
 from datetime import datetime
 
-
-
 """
 Instead of using Postgres' SERIAL and UUID, create a unique identifier by 
 concatenating relevant information togather and creating a sha256 digest
@@ -112,7 +110,26 @@ def new_user_info(email, fname, lname, address, city, country, conn):
     
     # print("success")
     
-    
+
+
+# FOR LOGGING IN A USER 
+def check_user_credentials(email, password, conn):
+    curs = conn.cursor()
+
+    # Replace 'password' with the appropriate column name in your '_user' table
+    curs.execute("SELECT password FROM _user WHERE email = %s", (email,))
+    result = curs.fetchone()
+
+    if result:
+        stored_password = result[0]
+        # Compare the stored password with the provided password
+        if stored_password == password:
+            return True
+
+    return False
+
+
+
 def check_search_object(search_object:dict) -> bool:
     for (_, v) in search_object.items():
         

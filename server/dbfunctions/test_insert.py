@@ -3,14 +3,14 @@ import psycopg2
 import dsn
 import pickle 
 from postgres_tables import TABLE_NAMES
+import insert_data
+
 
 def clear_tables():
     conn = psycopg2.connect(dsn.DSN)
     curs = conn.cursor()
     
     _tables = TABLE_NAMES
-    
-    
     
     tables = ", ".join(_tables)
     q = ""
@@ -160,13 +160,35 @@ def test_ads_multi_insertions():
     curs.close()
     
     conn.close()  
-        
-        
+
+# @app.route('/register', methods=['POST'])
+# def register():
+#     data = request.get_json()
+#     email = data['email']
+#     fname = data['fname']
+#     lname = data['lname']
+#     address = data['address']
+#     city = data['city']
+#     country = data['country']
+
+#     try:
+#         assert type(email) == str 
     
+#         #fc = insert_data.check_field(email)
+#         conn = psycopg2.connect(dsn.DSN)
+#         insert_data.new_user_info(email, fname, lname, address, city, country, conn)
+#         curs = conn.cursor()
+#         q = f"SELECT * FROM _user;"
+#         curs.execute(q) 
+#         res = curs.fetchone()
     
-    
-    
-    
+#         print(f"got back: {res}") 
+       
+
+#         return jsonify({"status": "success"}), 201
+#     except Exception as e:
+#         return jsonify({"status": "error", "message": str(e)}), 400
+ 
 if __name__ == "__main__":
     clear_tables()
     test_new_usr()
