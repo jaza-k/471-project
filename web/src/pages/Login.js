@@ -3,8 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import "../styles/login.sass";
 import key from "../assets/key.png";
 import { ReactComponent as Logo } from "../assets/findmyride-logo.svg";
+import PropTypes from 'prop-types';
 
-function Login() {
+function Login({ setToken }) {
+  Login.propTypes = {
+    setToken: PropTypes.func.isRequired
+  };
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -13,19 +18,22 @@ function Login() {
     navigate("/");
   }
 
-  const loginUser = async (event) => {
-    event.preventDefault();
-    const user = {
-      email: email,
-      password: password,
-    };
+  const handleLogin = async e => {
+    e.preventDefault();
+    const token = await loginUser({
+      email,
+      password
+    });
+    setToken(token);
+  }
 
+  async function loginUser(credentials) {
     try {
       const response = await fetch("http://localhost:8000/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(user),
-      });
+        body: JSON.stringify(credentials),
+      }).then(data => data.json());
 
       if (response.ok) {
         const result = await response.json();
@@ -38,7 +46,6 @@ function Login() {
       console.error("Error:", error);
     }
   };
-
 
   return (
     <div className="App fade-in">
@@ -61,6 +68,7 @@ function Login() {
                       type="text"
                       name="uname"
                       required
+                      onChange={(event) => setEmail(event.target.value)}
                     />
                   </div>
 
@@ -72,13 +80,14 @@ function Login() {
                       type="password"
                       name="pass"
                       required
+                      onChange={(event) => setPassword(event.target.value)}
                     />
                   </div>
                 </div>
               </form>
             </div>
             <Link
-              onClick={loginUser}
+              onClick={handleLogin}
               id="dashboard-button"
               className="button button-dark button-large"
             >

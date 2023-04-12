@@ -5,7 +5,7 @@
 
 .page-heading
 	color: #331832
-	font-size: calc(30px + 2vmin)
+	font-size: calc(25px + 2vmin)
 	font-weight: bold
 	margin-bottom: 0
 	margin-right: 5vw
@@ -83,8 +83,8 @@
 	flex-direction: row
 	gap: 10px
 	position: absolute
-	right: 25px // Changed from 25px to 3vw
-	top: 25px // Changed from 25px to 3vw
+	right: 25px 
+	top: 25px 
 	@media (max-width:700px)
 		flex-direction: column
 		gap: 0
@@ -93,16 +93,16 @@
 	flex: 1
 
 .illustration1
-	width: 50vw // Changed from 600px to 50vw
-	height: 40vh // Changed from 500px to 40vh
+	width: 50vw 
+	height: 40vh
 	margin-left: auto
 	margin-right: auto
-	padding-right: 10vw // Changed from 105px to 10vw
-	margin-top: 4vh // Changed from 20px to 4vh
+	padding-right: 10vw
+	margin-top: 4vh
 	@media (max-width:480px)
-		width: 70vw // Changed from 300px to 70vw
-		height: 35vh // Changed from 300px to 35vh
-		padding-right: 0 // Remove right padding on small screens
+		width: 70vw 
+		height: 35vh
+		padding-right: 0 
 
 .end-buttons
 	display: flex
@@ -117,12 +117,12 @@
 	bottom: 0
 	left: 0
 	margin: 4vh 
-	padding: 1vh // Changed from 5px to 1vh
-	min-width: 8vw // Changed from 85px to 8vw
+	padding: 1vh 
+	min-width: 8vw 
 
 #getstarted-button
 	margin-left: 35vw
-	width: 12%
+	width: 20%
 	display: inline-flex
 	align-items: flex-start
 	justify-content: center
@@ -132,7 +132,7 @@
 	font-weight: 600
 	text-decoration: none
 	min-width: 8vw 
-	font-size: calc(1vw + 1.2vh) 
+	font-size: calc(10px + 1vmin)
 	transition: 0.2s
 	border: none
 	user-select: none
@@ -141,9 +141,15 @@
 	&:hover
 		cursor: pointer
 		transform: scale(1.05)
-	@media (max-width:480px)
-		width: 5vw 
+	@media (max-width:1000px)
+		width: 35%
 		margin-left: 33vw 
+	@media (max-width:700px)
+		width: 45%
+		margin-left: 33vw 
+	@media (max-width:480px)
+		width: 50%
+		margin-left: 20% 
 
 .number
 	font-family: 'Poppins', sans-serif
@@ -198,12 +204,14 @@
 .logo-bar
 	display: flex
 	flex-direction: row
-	width: 13vw // Changed from 220px to 20vw
-	margin-top: 2vh // Changed from 10px to 2vh
-	margin-left: 1vw // Changed from 15px to 2vw
+	width: 16vw 
+	margin-top: 2vh 
+	margin-left: 1vw 
 	cursor: pointer
 	@media all and (max-width: 1050px)
-		width: 27vw !important
+		width: 25vw !important
+	@media all and (max-width: 800px)
+		width: 30vw !important
 	@media (max-width:480px)
 		width: 40vw !important
 		flex-direction: column
