@@ -1,5 +1,5 @@
-import vehicles
-import motorcycles
+import webscraper.vehicles as vehicles
+import webscraper.motorcycles as motorcycles
 import pandas as pd
 import pickle
 
@@ -46,5 +46,6 @@ def save_sample_motorcycle():
         
         
 if __name__ == "__main__":
-    save_sample_vehicle()
-    save_sample_motorcycle()
+    ...
+    # save_sample_vehicle()
+    # save_sample_motorcycle()
