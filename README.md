@@ -9,6 +9,7 @@ Before getting started, you need to have the following software installed on you
 - Ubuntu (https://ubuntu.com/tutorials/install-ubuntu-on-wsl2-on-windows-10#1-overview)
 - Node.js
 - npm
+- Firefox (for the webscraper)
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ## Backend
