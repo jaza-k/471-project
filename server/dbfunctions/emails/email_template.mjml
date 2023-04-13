@@ -1,7 +1,13 @@
 <mjml>
+  <mj-style>
+    .btn_block a {
+      display: block !important;
+    } 
+  </mj-style>
+
   <mj-head>
-    <mj-title>Set the title, usually for accessibility tools</mj-title>
-    <mj-preview>Set inbox preview text here, otherwise it might be something nonsensical</mj-preview>
+    <mj-title>FindMyRide - New Matches to Review!</mj-title>
+    <mj-preview> </mj-preview>
     <mj-attributes>
       <mj-all font-family="Helvetica, Arial, sans-serif"></mj-all>
       <mj-text font-weight="400" font-size="16px" color="#4A4A4A" line-height="24px" />
@@ -11,16 +17,16 @@
   <mj-body>
     <mj-section>
       <mj-column>
-        <mj-image src="../web/src/assets/findmyride-logo.svg" alt="JustJensen Logo" align="center" width="1000px"></mj-image>
+        <mj-image src="https://i.ibb.co/DG6T8Vf/findmyride-logo.png" alt="JustJensen Logo" align="center" width="1000px"></mj-image>
         <mj-text font-size="24px" align="left" font-weight="800" line-height="24px" color="#361D2E">New Matches to Review!</mj-text>
       </mj-column>
     </mj-section>
     <mj-section>
       <mj-column width="100%" background-color="#f3f3f3" border-radius="4px" padding-top="15px" padding-bottom="15px">
-      <mj-text>Hello {user_name},</mj-text>
+      <mj-text>Hello FNAME,</mj-text>
       <mj-text>We've found some possible matches to your vehicle and added them for review in your account!</mj-text>
       <mj-text>Sign into your account below to review your matches!</mj-text>
-      <mj-button background-color="#361D2E">Review My Matches - prob link to localhost login</mj-button>
+      <mj-button href="www.localhost:3000/login" css-class="btn_block" background-color="#361D2E">Review My Matches</mj-button>
       </mj-column>
     </mj-section>
     <mj-section>
