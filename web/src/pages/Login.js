@@ -4,12 +4,10 @@ import "../styles/login.sass";
 import key from "../assets/key.png";
 import { ReactComponent as Logo } from "../assets/findmyride-logo.svg";
 import PropTypes from 'prop-types';
+import { setUserToken } from "./Auth";
+import axios from 'axios';
 
-function Login({ setToken }) {
-  Login.propTypes = {
-    setToken: PropTypes.func.isRequired
-  };
-
+function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -18,34 +16,25 @@ function Login({ setToken }) {
     navigate("/");
   }
 
-  const handleLogin = async e => {
-    e.preventDefault();
-    const token = await loginUser({
-      email,
-      password
-    });
-    setToken(token);
-  }
-
-  async function loginUser(credentials) {
-    try {
-      const response = await fetch("http://localhost:8000/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(credentials),
-      }).then(data => data.json());
-
-      if (response.ok) {
-        const result = await response.json();
-        alert(result.message); // Display a success message
-        navigate("/dashboard"); // Redirect to the dashboard page
-      } else {
+  const handleLogin = () => {
+    axios.post('http://localhost:8000/login', {
+      email: email,
+      password: password
+    })
+    .then(function (response) {
+      if(response.data.token){       
+        setUserToken(response.data.token)
+        navigate("/dashboard");
+      }
+      else {
         alert("Error logging in");
       }
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
+
 
   return (
     <div className="App fade-in">
@@ -58,7 +47,7 @@ function Login({ setToken }) {
               <h1 className="login-heading">Welcome back</h1>
             </div>
             <div className="form">
-              <form onSubmit={loginUser}>
+              <form onSubmit={handleLogin}>
                 <div>
                   <div className="input-container">
                     <label className="form-control mt-1">Email address</label>
@@ -66,7 +55,7 @@ function Login({ setToken }) {
                       className="input-field"
                       placeholder="email@example.com"
                       type="text"
-                      name="uname"
+                      name="email"
                       required
                       onChange={(event) => setEmail(event.target.value)}
                     />

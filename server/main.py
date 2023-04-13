@@ -1,10 +1,23 @@
 import uvicorn
 import psycopg2 
+from typing import Optional
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dbfunctions import dsn
 from dbfunctions import insert_data
+import jwt
 from pydantic import BaseModel
+from fastapi.encoders import jsonable_encoder
+
+SECRET_KEY = "my_secret_key"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 800
+
+# REMOVE IN FINAL APP
+dummy_user= {
+    "email": "jaza",
+    "password": "password",
+}
 
 app = FastAPI(
     title="471 Server",
@@ -23,6 +36,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    username: Optional[str] = None
 
 class NewUser(BaseModel):
     fname: str
@@ -57,6 +77,8 @@ async def login(login_user: LoginUser):
     # Connect to PostgreSQL database
     conn = psycopg2.connect(dsn.DSN)
 
+    # Encode the user data
+    data = jsonable_encoder(login_user)
     # Call the check_user_credentials function with the user data
     is_valid_user = insert_data.check_user_credentials(login_user.email, login_user.password, conn)
 
@@ -65,7 +87,8 @@ async def login(login_user: LoginUser):
 
     # Return the result
     if is_valid_user:
-        return {"message": "Logged in successfully"}
+        encoded_jwt = jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
+        return {'token': encoded_jwt, 'message': 'Logged in successfully'}
     else:
         return {"message": "Invalid email or password"}
 

@@ -1,6 +1,8 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import {RequireToken} from './Auth.js'
+
 // pages
 import Landing from "./Landing";
 // import Workflow from "./Workflow";
@@ -15,6 +17,15 @@ function App() {
       <Route element={<Landing/>} path="/" exact />
         <Route element={<Login/>} path="/login" exact />
         <Route element={<Signup/>} path="/signup" exact />
+        {/* <Route
+          exact
+          path="/dashboard"
+          element={
+            <RequireToken>
+              <Dashboard />
+            </RequireToken>
+          }
+        /> */}
         <Route element={<Dashboard/>} path="/dashboard" exact />
       </Routes>
     </BrowserRouter>
