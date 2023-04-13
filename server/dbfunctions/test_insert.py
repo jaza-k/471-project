@@ -163,6 +163,7 @@ def test_ads_multi_insertions():
 
 if __name__ == "__main__":
     clear_tables()
+    print("tables cleared")
     test_new_usr()
     test_new_usr_search()
     test_ads_multi_insertions()
