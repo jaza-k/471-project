@@ -8,3 +8,7 @@ email-to
 secure-smtplib
 psycopg2
 geopy
+uvicorn
+fastapi
+jwt
+pydantic
