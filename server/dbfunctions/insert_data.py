@@ -1,10 +1,8 @@
-import dsn 
+# import dsn 
 import psycopg2 
 import re 
 from hashlib import sha256
 from datetime import datetime
-
-
 
 """
 Instead of using Postgres' SERIAL and UUID, create a unique identifier by 
@@ -83,7 +81,7 @@ def check_country_city_exists(curs, _country:str, _city:str):
         
     # else nothing needs to be done if they already exists 
     
-def new_user_info(email, fname, lname, address, city, country):
+def new_user_info(email, fname, lname, address, city, country, conn):
     
     # check types to make sure they are strings and stop injections 
     assert type(email) == str   and check_field(email),     "email is not valid"
@@ -94,7 +92,7 @@ def new_user_info(email, fname, lname, address, city, country):
     assert type(country) == str and check_field(country),   "country is not valid"
     
     # get db conn objects 
-    conn = psycopg2.connect(dsn.DSN)
+    # conn = psycopg2.connect(dsn.DSN)
     curs = conn.cursor() 
     
     # check city and country already are in the db 
@@ -108,11 +106,30 @@ def new_user_info(email, fname, lname, address, city, country):
     conn.commit()
     
     curs.close()
-    conn.close()
+    # conn.close()
     
     # print("success")
     
-    
+
+
+# FOR LOGGING IN A USER 
+def check_user_credentials(email, password, conn):
+    curs = conn.cursor()
+
+    # Replace 'password' with the appropriate column name in your '_user' table
+    curs.execute("SELECT password FROM _user WHERE email = %s", (email,))
+    result = curs.fetchone()
+
+    if result:
+        stored_password = result[0]
+        # Compare the stored password with the provided password
+        if stored_password == password:
+            return True
+
+    return False
+
+
+
 def check_search_object(search_object:dict) -> bool:
     for (_, v) in search_object.items():
         
@@ -122,11 +139,11 @@ def check_search_object(search_object:dict) -> bool:
     return True 
     
     
-def new_user_search(search_object:dict, email:str, origin_city:str):
+def new_user_search(search_object:dict, email:str, origin_city:str, conn):
     assert check_search_object(search_object), "invalid inputs"
     
     # get db conn 
-    conn = psycopg2.connect(dsn.DSN) 
+    # conn = psycopg2.connect(dsn.DSN) 
     curs = conn.cursor()
     
     # first update number of user searches and create entry in active searches table 
@@ -144,8 +161,8 @@ def new_user_search(search_object:dict, email:str, origin_city:str):
     # create uuid for the active user search 
     usr_search_uuid = create_uuid([email, active_searches, current_time])
     
-    insert_usr_search = "INSERT INTO user_search VALUES (%s, %s, %s, %s, %s)"
-    insert_usr_tuple = (usr_search_uuid, current_time, True, email, origin_city)
+    insert_usr_search = "INSERT INTO user_search VALUES (%s, %s, %s, %s, %s, %s)"
+    insert_usr_tuple = (usr_search_uuid, current_time, True, email, origin_city, active_searches)
     
     curs.execute(insert_usr_search, insert_usr_tuple)
     
@@ -191,7 +208,7 @@ def new_user_search(search_object:dict, email:str, origin_city:str):
     conn.commit()
     curs.close()
     
-    conn.close()
+    # conn.close()
     
 def extract_marketplace_name(url:str):
     _match = re.search(r'www\.(\w+)\.', url)
@@ -238,8 +255,8 @@ def check_ad_already_exists(curs, uuid:str) -> bool:
     return False 
 
 
-def new_scraped_ad(scrap_object:dict, ad_type:str, marketplace_url:str):
-    conn = psycopg2.connect(dsn.DSN)
+def new_scraped_ad(scrap_object:dict, ad_type:str, marketplace_url:str, conn):
+    # conn = psycopg2.connect(dsn.DSN)
     curs = conn.cursor()
     
     ### first create the entry in the scraped ads table ### 
@@ -321,7 +338,7 @@ def new_scraped_ad(scrap_object:dict, ad_type:str, marketplace_url:str):
     conn.commit()
     curs.close()
     
-    conn.close()
+    # conn.close()
 
 
 if __name__ == "__main__":

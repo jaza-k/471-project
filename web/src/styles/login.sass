@@ -1,16 +1,20 @@
 .lock-image
     margin-left: 45%
     margin-top: 20px
-    widht: 120px
+    width: 140px
     margin-bottom: 0
     height: 100px
+    @media (max-width:480px)
+        margin-left: 30%
 
 .key-image
     margin-left: 46%
     margin-top: 20px
-    widht: 90px
+    width: 120px
     margin-bottom: 0
     height: 100px
+    @media (max-width:480px)
+        margin-left: 37%
 
 .login-heading
     color: #331832
@@ -22,11 +26,13 @@
     text-align: center
     font-family: 'Lexend', sans-serif
     @media (max-width:480px)
-        font-size: calc(10px + 2vmin)
+        font-size: calc(14px + 2vmin)
         text-align: center
+        margin-right: 0
     @media (max-width: 700px)
-        font-size: calc(10px + 2vmin)
+        font-size: calc(14px + 2vmin)
         text-align: center
+        margin-right: 0
 
 input[type="text"],
 input[type="password"]
@@ -53,6 +59,8 @@ input[type="submit"]:hover
     background-color: white
     padding: 2rem
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
+    @media (max-width:480px)
+        padding: 1rem
 
 .list-container
     display: flex
@@ -78,8 +86,10 @@ input[type="submit"]:hover
     bottom: 5%
     left: 1%
     @media (max-width:480px)
-        width: 300px
-        height: 300px
+        width: 150px
+        height: 100px
+        bottom: 2%
+        left: 2%
 
 .gears2
     width: 250px
@@ -88,8 +98,10 @@ input[type="submit"]:hover
     top: 20%
     right: 1%
     @media (max-width:480px)
-        width: 300px
-        height: 300px
+        width: 150px
+        height: 100px
+        top: 10%
+        right: 2%
 
 .hello-heading
     color: #331832
@@ -103,9 +115,13 @@ input[type="submit"]:hover
     @media (max-width:480px)
         font-size: calc(10px + 2vmin)
         text-align: center
+        left: 50%
+        transform: translateX(-50%)
     @media (max-width: 700px)
         font-size: calc(10px + 2vmin)
         text-align: center
+        left: 50%
+        transform: translateX(-50%)
 
 .dashboard-subheading
     font-family: 'Lato', sans-serif
@@ -115,6 +131,11 @@ input[type="submit"]:hover
     position: fixed
     top: 23%
     left: 5%
+    @media (max-width:480px)
+        top: 18%
+        left: 50%
+        width: 80%
+        transform: translateX(-50%)
 
 .form-control
     font-family: 'Lato', sans-serif
@@ -127,15 +148,22 @@ input[type="submit"]:hover
 #dashboard-button
     margin-top: 30px
     margin-left: 70px
+    @media (max-width:480px)
+        margin-left: 15%
 
 .or-sign-up
     margin-top: 60px
     margin-left: 60px
+    @media (max-width:480px)
+        margin-left: 15%
 
 #or-signup-button
     margin-top: 15px
     margin-left: 77px
     width: 30%
+    @media (max-width:480px)
+        width: 40%
+        margin-left: 15%
 
 .names, .location
     display: flex
@@ -153,3 +181,48 @@ input[type="submit"]:hover
 .or-login
     margin-left: 37%
     margin-top: 60px
+    @media (max-width:480px)
+        margin-left: 30%
+        margin-top: 30px
+
+.form
+    width: 100%
+    max-width: 500px
+    margin: 0 auto
+
+.input-container
+    margin-bottom: 15px
+
+.input-field
+    width: 100%
+    box-sizing: border-box
+    font-size: 14px
+
+.names
+    display: flex
+    flex-wrap: wrap
+    justify-content: space-between
+
+    .first-name, .last-name
+        flex-basis: calc(50% - 10px)
+
+.location
+    display: flex
+    flex-wrap: wrap
+    justify-content: space-between
+
+    .city, .postal-code
+        flex-basis: calc(50% - 10px)
+
+@media (max-width: 480px)
+    .names, .location
+        flex-direction: column
+
+    .first-name, .last-name, .city, .postal-code
+        flex-basis: 100%
+
+    .input-field
+        font-size: 12px
+
+    .form-control
+        font-size: 12px
