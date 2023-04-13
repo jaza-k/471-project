@@ -17,7 +17,7 @@ user_search_table = """
 CREATE TABLE IF NOT EXISTS user_search 
 (
     _sid VARCHAR(64) NOT NULL,
-    _start_date timestamp(0) with time zone NOT NULL,
+    _start_date timestamp with time zone NOT NULL,
     _active BOOLEAN NOT NULL, 
     _email VARCHAR(100) NOT NULL, 
     origin_city VARCHAR(128) NOT NULL,
