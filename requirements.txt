@@ -7,8 +7,12 @@ selenium==4.8.3
 email-to
 secure-smtplib
 psycopg2
+<<<<<<< HEAD
 geopy
 uvicorn
 fastapi
 jwt
 pydantic
+=======
+geopy
+>>>>>>> origin/main
