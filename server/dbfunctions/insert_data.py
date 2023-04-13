@@ -2,7 +2,7 @@
 import psycopg2 
 import re 
 from hashlib import sha256
-from datetime import datetime
+from datetime import datetime, timezone
 
 """
 Instead of using Postgres' SERIAL and UUID, create a unique identifier by 
@@ -156,7 +156,10 @@ def new_user_search(search_object:dict, email:str, origin_city:str, conn):
     active_searches = searches[0]
     active_searches += 1
     
-    current_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    # current_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    current_time = datetime.now().strftime("%Y%m%d %H:%M:%S")
+    print(current_time)
+    # current_time = datetime.now(timezone.utc)
     
     # create uuid for the active user search 
     usr_search_uuid = create_uuid([email, active_searches, current_time])
@@ -279,7 +282,7 @@ def new_scraped_ad(scrap_object:dict, ad_type:str, marketplace_url:str, conn):
     if check_ad_already_exists(curs, uuid_scraped_ad):
         return None 
     
-    time_stamp = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    time_stamp = datetime.now().strftime("%Y%m%d %H:%M:%S")
     
     insert_scraped = "INSERT INTO scraped_ads VALUES (%s, %s, %s, %s)"
     insert_scraped_tuple = (uuid_scraped_ad, _ad_url, _city, time_stamp) 
