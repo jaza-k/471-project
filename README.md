@@ -45,7 +45,7 @@ Next, get into the psql shell with the following command:
 
 To create a user, do: 
 
-`CREATE USER admin WITH PASSWORD '123';`
+`CREATE USER admin WITH PASSWORD '123';`\n
 `ALTER USER admin WITH SUPERUSER;` 
 
 By doing this, the database should be configured correctly with how it is set up the in code. 
