@@ -1,10 +1,11 @@
 
 user_table = """CREATE TABLE IF NOT EXISTS _user (
     email VARCHAR(128),
+    password VARCHAR(128),
     first_name VARCHAR(64),
-    last_name VARCHAR(64),
-    _address VARCHAR(128), 
+    last_name VARCHAR(64), 
     _city_name VARCHAR(128),
+    _country_name VARCHAR(64),
     _number_of_active_searches INT,
     PRIMARY KEY (email), 
     CONSTRAINT fk_city_name 

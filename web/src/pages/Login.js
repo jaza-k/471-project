@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import "../styles/login.sass";
 import key from "../assets/key.png";
 import { ReactComponent as Logo } from "../assets/findmyride-logo.svg";
-import PropTypes from 'prop-types';
 import { setUserToken } from "./Auth";
 import axios from 'axios';
 
