@@ -1,8 +1,12 @@
-# CPSC 471 Project - Group 28
-### Jaza Khan (30119100)
-### Sahil Brar (30021440)
-### Peter Kuchel (30008687)
+Find My Ride
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+A web application which uses a description of your stolen/lost vehicle to scrape the web & popular buy-and-sell sites to check if it’s possibly being resold. 
+
+### Contributors
+Jaza Khan
+Sahil Brar
+Peter Kuchel
+
 ### Prerequisites
 Before getting started, you need to have the following software installed on your machine:
 - Python (v3.9 or greater)
